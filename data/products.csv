@@ -1,0 +1,5 @@
+name,                     slug,              description,                             optionGroups,     optionValues, facets,          sku,      price,taxCategory,stockOnHand,trackInventory,variantFacets
+Classic Diamond Solitaire,classic-solitaire,"Timeless 1 carat diamond solitaire ring","Metal:Ring Size","Platinum:7","Engagement Rings",SOL-PLT-7,500000,standard,10,true,"Carat:1.0|Cut:Round|Color:D|Clarity:VS1"
+Classic Diamond Solitaire,classic-solitaire,"Timeless 1 carat diamond solitaire ring","Metal:Ring Size","Platinum:8","Engagement Rings",SOL-PLT-8,500000,standard,10,true,"Carat:1.0|Cut:Round|Color:D|Clarity:VS1"
+Classic Diamond Solitaire,classic-solitaire,"Timeless 1 carat diamond solitaire ring","Metal:Ring Size","White Gold:7","Engagement Rings",SOL-WG-7,450000,standard,15,true,"Carat:1.0|Cut:Round|Color:D|Clarity:VS1"
+Halo Engagement Ring,halo-engagement,"Beautiful halo setting with center diamond","Metal:Ring Size","Platinum:6.5","Engagement Rings",HAL-PLT-6.5,750000,standard,5,true,"Carat:1.5|Cut:Princess|Color:E|Clarity:VS2"
