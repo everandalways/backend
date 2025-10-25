@@ -3,7 +3,7 @@ import { populate } from '@vendure/core/cli';
 import path from 'path';
 import { config } from '../vendure-config';
 
-const productsCsvFile = path.join(__dirname, '../../data/products.csv');
+const productsCsvFile = path.join(__dirname, '../../data/table.csv');
 
 const populateConfig = {
     ...config,
