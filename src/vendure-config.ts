@@ -37,6 +37,7 @@ export const config: VendureConfig = {
     },
     authOptions: {
         tokenMethod: ['bearer', 'cookie'],
+         requireVerification: true,
         superadminCredentials: {
             identifier: process.env.SUPERADMIN_USERNAME,
             password: process.env.SUPERADMIN_PASSWORD,
@@ -78,21 +79,27 @@ export const config: VendureConfig = {
         DefaultSchedulerPlugin.init(),
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
         DefaultSearchPlugin.init({ bufferUpdates: false, indexStockStatus: true }),
-        EmailPlugin.init({
-            devMode: true,
-            outputPath: path.join(__dirname, '../static/email/test-emails'),
-            route: 'mailbox',
-            handlers: defaultEmailHandlers,
-            templateLoader: new FileBasedTemplateLoader(path.join(__dirname, '../static/email/templates')),
-            globalTemplateVars: {
-                // The following variables will change depending on your storefront implementation.
-                // Here we are assuming a storefront running at http://localhost:8080.
-                fromAddress: '"example" <noreply@example.com>',
-                verifyEmailAddressUrl: 'http://localhost:8080/verify',
-                passwordResetUrl: 'http://localhost:8080/password-reset',
-                changeEmailAddressUrl: 'http://localhost:8080/verify-email-address-change'
-            },
-        }),
+EmailPlugin.init({
+   
+    transport: {
+        type: 'smtp',
+        host: 'smtp.hostinger.com',
+        port: 465,
+        secure: true,  // true for port 465
+        auth: {
+            user: 'orders@everandalways.store',
+            pass: 'Saif.110tmkfc',
+        },
+    },
+    handlers: defaultEmailHandlers,
+    templateLoader: new FileBasedTemplateLoader(path.join(__dirname, '../static/email/templates')),
+    globalTemplateVars: {
+        fromAddress: '"Ever & Always" <orders@everandalways.store>',
+        verifyEmailAddressUrl: 'http://localhost:8002/verify',
+        passwordResetUrl: 'http://localhost:8002/account/password',
+        changeEmailAddressUrl: 'http://localhost:8002/verify-email-change'
+    },
+}),
         // Uncomment the following to enable Stripe payments.
             StripePlugin.init({
         storeCustomersInStripe: true,
