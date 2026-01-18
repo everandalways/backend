@@ -1,0 +1,6 @@
+name,slug,description,assets,facets,optionGroups,optionValues,sku,price,taxCategory,stockOnHand,trackInventory,variantAssets,variantFacets
+Laptop,laptop,"High-performance laptop for professionals",laptop.jpg,"Category:Electronics|Brand:Acme","RAM|Color","16GB|Silver",LAP16-SLV,1500,Standard,10,true,laptop-silver.jpg,"Color:Silver"
+Laptop,laptop,"High-performance laptop for professionals",laptop.jpg,"Category:Electronics|Brand:Acme","RAM|Color","32GB|Black",LAP32-BLK,1700,Standard,5,true,laptop-black.jpg,"Color:Black"
+Wireless Mouse,mouse,"Ergonomic wireless mouse",mouse.jpg,"Category:Electronics|Brand:Acme",,MOUSE-001,25,Standard,50,true,mouse.jpg,
+Keyboard,keyboard,"Mechanical keyboard with RGB lighting",keyboard.jpg,"Category:Electronics|Brand:Acme","Color","Black",KEYB-BLK,120,Standard,15,true,keyboard-black.jpg,"Color:Black"
+Keyboard,keyboard,"Mechanical keyboard with RGB lighting",keyboard.jpg,"Category:Electronics|Brand:Acme","Color","White",KEYB-WHT,120,Standard,8,true,keyboard-white.jpg,"Color:White"
