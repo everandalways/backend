@@ -13,6 +13,7 @@ import 'dotenv/config';
 import path from 'path';
 import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import { GoogleAuthPlugin } from './plugins/google-auth.plugin';
+import { RateLimitPlugin } from './plugins/rate-limit.plugin';
 
 const IS_DEV = process.env.APP_ENV === 'dev';
 const serverPort = +process.env.PORT || 3000;
@@ -34,6 +35,9 @@ export const config: VendureConfig = {
             adminApiDebug: true,
             shopApiDebug: true,
         } : {}),
+        // Disable GraphQL introspection and playground in production
+        graphQLPlayground: IS_DEV,
+        graphQLIntrospection: IS_DEV,
     },
     authOptions: {
         tokenMethod: ['bearer', 'cookie'],
@@ -118,5 +122,6 @@ AdminUiPlugin.init({
     // }
 }),
   GoogleAuthPlugin,
+        RateLimitPlugin,
     ],
 };

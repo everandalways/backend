@@ -16,6 +16,7 @@ declare global {
             DB_USERNAME: string;
             DB_PASSWORD: string;
             DB_SCHEMA: string;
+            THROTTLE_LIMIT_PER_MINUTE?: string;
         }
     }
 }
