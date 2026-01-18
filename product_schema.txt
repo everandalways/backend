@@ -1,0 +1,302 @@
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:380:-- Name: collection_product_variants_product_variant; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:383:CREATE TABLE public.collection_product_variants_product_variant (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:385:    "productVariantId" integer NOT NULL
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:389:ALTER TABLE public.collection_product_variants_product_variant OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1035:    "productVariantId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1296:-- Name: product; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1299:CREATE TABLE public.product (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1309:ALTER TABLE public.product OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1312:-- Name: product_asset; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1315:CREATE TABLE public.product_asset (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1320:    "productId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1325:ALTER TABLE public.product_asset OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1328:-- Name: product_asset_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1331:CREATE SEQUENCE public.product_asset_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1340:ALTER SEQUENCE public.product_asset_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1343:-- Name: product_asset_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1346:ALTER SEQUENCE public.product_asset_id_seq OWNED BY public.product_asset.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1350:-- Name: product_channels_channel; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1353:CREATE TABLE public.product_channels_channel (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1354:    "productId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1359:ALTER TABLE public.product_channels_channel OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1362:-- Name: product_facet_values_facet_value; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1365:CREATE TABLE public.product_facet_values_facet_value (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1366:    "productId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1371:ALTER TABLE public.product_facet_values_facet_value OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1374:-- Name: product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1377:CREATE SEQUENCE public.product_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1386:ALTER SEQUENCE public.product_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1389:-- Name: product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1392:ALTER SEQUENCE public.product_id_seq OWNED BY public.product.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1396:-- Name: product_option; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1399:CREATE TABLE public.product_option (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1409:ALTER TABLE public.product_option OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1412:-- Name: product_option_group; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1415:CREATE TABLE public.product_option_group (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1421:    "productId" integer
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1425:ALTER TABLE public.product_option_group OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1428:-- Name: product_option_group_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1431:CREATE SEQUENCE public.product_option_group_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1440:ALTER SEQUENCE public.product_option_group_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1443:-- Name: product_option_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1446:ALTER SEQUENCE public.product_option_group_id_seq OWNED BY public.product_option_group.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1450:-- Name: product_option_group_translation; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1453:CREATE TABLE public.product_option_group_translation (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1463:ALTER TABLE public.product_option_group_translation OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1466:-- Name: product_option_group_translation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1469:CREATE SEQUENCE public.product_option_group_translation_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1478:ALTER SEQUENCE public.product_option_group_translation_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1481:-- Name: product_option_group_translation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1484:ALTER SEQUENCE public.product_option_group_translation_id_seq OWNED BY public.product_option_group_translation.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1488:-- Name: product_option_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1491:CREATE SEQUENCE public.product_option_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1500:ALTER SEQUENCE public.product_option_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1503:-- Name: product_option_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1506:ALTER SEQUENCE public.product_option_id_seq OWNED BY public.product_option.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1510:-- Name: product_option_translation; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1513:CREATE TABLE public.product_option_translation (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1523:ALTER TABLE public.product_option_translation OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1526:-- Name: product_option_translation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1529:CREATE SEQUENCE public.product_option_translation_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1538:ALTER SEQUENCE public.product_option_translation_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1541:-- Name: product_option_translation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1544:ALTER SEQUENCE public.product_option_translation_id_seq OWNED BY public.product_option_translation.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1548:-- Name: product_translation; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1551:CREATE TABLE public.product_translation (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1563:ALTER TABLE public.product_translation OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1566:-- Name: product_translation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1569:CREATE SEQUENCE public.product_translation_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1578:ALTER SEQUENCE public.product_translation_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1581:-- Name: product_translation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1584:ALTER SEQUENCE public.product_translation_id_seq OWNED BY public.product_translation.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1588:-- Name: product_variant; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1591:CREATE TABLE public.product_variant (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1603:    "productId" integer
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1607:ALTER TABLE public.product_variant OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1610:-- Name: product_variant_asset; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1613:CREATE TABLE public.product_variant_asset (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1618:    "productVariantId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1623:ALTER TABLE public.product_variant_asset OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1626:-- Name: product_variant_asset_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1629:CREATE SEQUENCE public.product_variant_asset_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1638:ALTER SEQUENCE public.product_variant_asset_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1641:-- Name: product_variant_asset_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1644:ALTER SEQUENCE public.product_variant_asset_id_seq OWNED BY public.product_variant_asset.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1648:-- Name: product_variant_channels_channel; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1651:CREATE TABLE public.product_variant_channels_channel (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1652:    "productVariantId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1657:ALTER TABLE public.product_variant_channels_channel OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1660:-- Name: product_variant_facet_values_facet_value; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1663:CREATE TABLE public.product_variant_facet_values_facet_value (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1664:    "productVariantId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1669:ALTER TABLE public.product_variant_facet_values_facet_value OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1672:-- Name: product_variant_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1675:CREATE SEQUENCE public.product_variant_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1684:ALTER SEQUENCE public.product_variant_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1687:-- Name: product_variant_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1690:ALTER SEQUENCE public.product_variant_id_seq OWNED BY public.product_variant.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1694:-- Name: product_variant_options_product_option; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1697:CREATE TABLE public.product_variant_options_product_option (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1698:    "productVariantId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1699:    "productOptionId" integer NOT NULL
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1703:ALTER TABLE public.product_variant_options_product_option OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1706:-- Name: product_variant_price; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1709:CREATE TABLE public.product_variant_price (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1720:ALTER TABLE public.product_variant_price OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1723:-- Name: product_variant_price_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1726:CREATE SEQUENCE public.product_variant_price_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1735:ALTER SEQUENCE public.product_variant_price_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1738:-- Name: product_variant_price_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1741:ALTER SEQUENCE public.product_variant_price_id_seq OWNED BY public.product_variant_price.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1745:-- Name: product_variant_translation; Type: TABLE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1748:CREATE TABLE public.product_variant_translation (
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1758:ALTER TABLE public.product_variant_translation OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1761:-- Name: product_variant_translation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1764:CREATE SEQUENCE public.product_variant_translation_id_seq
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1773:ALTER SEQUENCE public.product_variant_translation_id_seq OWNER TO postgres;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1776:-- Name: product_variant_translation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:1779:ALTER SEQUENCE public.product_variant_translation_id_seq OWNED BY public.product_variant_translation.id;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2099:    "productName" character varying NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2100:    "productVariantName" character varying NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2109:    "productPreview" character varying NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2110:    "productPreviewFocalPoint" text,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2111:    "productVariantPreview" character varying NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2112:    "productVariantPreviewFocalPoint" text,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2114:    "productInStock" boolean DEFAULT true NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2115:    "productVariantId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2117:    "productId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2118:    "productAssetId" integer,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2119:    "productVariantAssetId" integer,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2387:    "productVariantId" integer NOT NULL,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2477:    "productVariantId" integer,
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2951:-- Name: product id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2954:ALTER TABLE ONLY public.product ALTER COLUMN id SET DEFAULT nextval('public.product_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2958:-- Name: product_asset id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2961:ALTER TABLE ONLY public.product_asset ALTER COLUMN id SET DEFAULT nextval('public.product_asset_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2965:-- Name: product_option id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2968:ALTER TABLE ONLY public.product_option ALTER COLUMN id SET DEFAULT nextval('public.product_option_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2972:-- Name: product_option_group id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2975:ALTER TABLE ONLY public.product_option_group ALTER COLUMN id SET DEFAULT nextval('public.product_option_group_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2979:-- Name: product_option_group_translation id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2982:ALTER TABLE ONLY public.product_option_group_translation ALTER COLUMN id SET DEFAULT nextval('public.product_option_group_translation_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2986:-- Name: product_option_translation id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2989:ALTER TABLE ONLY public.product_option_translation ALTER COLUMN id SET DEFAULT nextval('public.product_option_translation_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2993:-- Name: product_translation id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:2996:ALTER TABLE ONLY public.product_translation ALTER COLUMN id SET DEFAULT nextval('public.product_translation_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3000:-- Name: product_variant id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3003:ALTER TABLE ONLY public.product_variant ALTER COLUMN id SET DEFAULT nextval('public.product_variant_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3007:-- Name: product_variant_asset id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3010:ALTER TABLE ONLY public.product_variant_asset ALTER COLUMN id SET DEFAULT nextval('public.product_variant_asset_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3014:-- Name: product_variant_price id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3017:ALTER TABLE ONLY public.product_variant_price ALTER COLUMN id SET DEFAULT nextval('public.product_variant_price_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3021:-- Name: product_variant_translation id; Type: DEFAULT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3024:ALTER TABLE ONLY public.product_variant_translation ALTER COLUMN id SET DEFAULT nextval('public.product_variant_translation_id_seq'::regclass);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3238:-- Name: product_variant_channels_channel PK_1a10ca648c3d73c0f2b455ae191; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3241:ALTER TABLE ONLY public.product_variant_channels_channel
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3242:    ADD CONSTRAINT "PK_1a10ca648c3d73c0f2b455ae191" PRIMARY KEY ("productVariantId", "channelId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3246:-- Name: product_variant PK_1ab69c9935c61f7c70791ae0a9f; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3249:ALTER TABLE ONLY public.product_variant
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3326:-- Name: product_option_group_translation PK_44ab19f118175288dff147c4a00; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3329:ALTER TABLE ONLY public.product_option_group_translation
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3342:-- Name: product_variant_translation PK_4b7f882e2b669800bed7ed065f0; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3345:ALTER TABLE ONLY public.product_variant_translation
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3350:-- Name: product_option PK_4cf3c467e9bc764bdd32c4cd938; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3353:ALTER TABLE ONLY public.product_option
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3366:-- Name: collection_product_variants_product_variant PK_50c5ed0504ded53967be811f633; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3369:ALTER TABLE ONLY public.collection_product_variants_product_variant
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3370:    ADD CONSTRAINT "PK_50c5ed0504ded53967be811f633" PRIMARY KEY ("collectionId", "productVariantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3390:-- Name: product_translation PK_62d00fbc92e7a495701d6fee9d5; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3393:ALTER TABLE ONLY public.product_translation
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3402:    ADD CONSTRAINT "PK_6470dd173311562c89e5f80b30e" PRIMARY KEY ("languageCode", "productVariantId", "channelId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3414:-- Name: product_option_translation PK_69c79a84baabcad3c7328576ac0; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3417:ALTER TABLE ONLY public.product_option_translation
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3430:-- Name: product_channels_channel PK_722acbcc06403e693b518d2c345; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3433:ALTER TABLE ONLY public.product_channels_channel
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3434:    ADD CONSTRAINT "PK_722acbcc06403e693b518d2c345" PRIMARY KEY ("productId", "channelId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3534:-- Name: product_variant_facet_values_facet_value PK_a28474836b2feeffcef98c806e1; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3537:ALTER TABLE ONLY public.product_variant_facet_values_facet_value
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3538:    ADD CONSTRAINT "PK_a28474836b2feeffcef98c806e1" PRIMARY KEY ("productVariantId", "facetValueId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3638:-- Name: product_variant_price PK_ba659ff2940702124e799c5c854; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3641:ALTER TABLE ONLY public.product_variant_price
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3662:-- Name: product PK_bebc9158e480b949565b4dc7a82; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3665:ALTER TABLE ONLY public.product
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3678:-- Name: product_asset PK_c56a83efd14ec4175532e1867fc; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3681:ALTER TABLE ONLY public.product_asset
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3686:-- Name: product_variant_options_product_option PK_c57de5cb6bb74504180604a00c0; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3689:ALTER TABLE ONLY public.product_variant_options_product_option
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3690:    ADD CONSTRAINT "PK_c57de5cb6bb74504180604a00c0" PRIMARY KEY ("productVariantId", "productOptionId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3718:-- Name: product_variant_asset PK_cb1e33ae13779da176f8b03a5d3; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3721:ALTER TABLE ONLY public.product_variant_asset
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3742:-- Name: product_facet_values_facet_value PK_d57f06b38805181019d75662aa6; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3745:ALTER TABLE ONLY public.product_facet_values_facet_value
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3746:    ADD CONSTRAINT "PK_d57f06b38805181019d75662aa6" PRIMARY KEY ("productId", "facetValueId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3750:-- Name: product_option_group PK_d76e92fdbbb5a2e6752ffd4a2c1; Type: CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3753:ALTER TABLE ONLY public.product_option_group
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3935:CREATE INDEX "IDX_06e7d73673ee630e8ec50d0b29" ON public.product_facet_values_facet_value USING btree ("facetValueId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3942:CREATE INDEX "IDX_0d1294f5c22a56da7845ebab72" ON public.product_asset USING btree ("productId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3949:CREATE INDEX "IDX_0d641b761ed1dce4ef3cd33d55" ON public.product_variant_facet_values_facet_value USING btree ("facetValueId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3963:CREATE INDEX "IDX_0e6f516053cf982b537836e21c" ON public.product_variant USING btree ("featuredAssetId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:3977:CREATE INDEX "IDX_10b5a2e3dee0e30b1e26c32f5c" ON public.product_variant_asset USING btree ("assetId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4061:CREATE INDEX "IDX_26d12be3b5fec6c4adb1d79284" ON public.product_channels_channel USING btree ("productId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4117:CREATE INDEX "IDX_420f4d6fb75d38b9dca79bc43b" ON public.product_variant_translation USING btree ("baseId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4173:CREATE INDEX "IDX_526f0131260eec308a3bd2b61b" ON public.product_variant_options_product_option USING btree ("productVariantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4180:CREATE INDEX "IDX_5888ac17b317b93378494a1062" ON public.product_asset USING btree ("assetId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4222:CREATE INDEX "IDX_69567bc225b6bbbd732d6c5455" ON public.product_variant_facet_values_facet_value USING btree ("productVariantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4229:CREATE INDEX "IDX_6a0558e650d75ae639ff38e413" ON public.product_facet_values_facet_value USING btree ("productId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4243:CREATE INDEX "IDX_6e420052844edf3a5506d863ce" ON public.product_variant USING btree ("productId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4250:CREATE INDEX "IDX_6faa7b72422d9c4679e2f186ad" ON public.collection_product_variants_product_variant USING btree ("collectionId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4257:CREATE INDEX "IDX_6fb55742e13e8082954d0436dc" ON public.search_index_item USING btree ("productName");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4313:CREATE INDEX "IDX_7dbc75cb4e8b002620c4dbfdac" ON public.product_translation USING btree ("baseId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4327:CREATE UNIQUE INDEX "IDX_7fc20486b8cfd33dc84c96e168" ON public.stock_level USING btree ("productVariantId", "stockLocationId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4369:CREATE INDEX "IDX_91a19e6613534949a4ce6e76ff" ON public.product USING btree ("featuredAssetId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4383:CREATE INDEX "IDX_93751abc1451972c02e033b766" ON public.product_option_group_translation USING btree ("baseId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4404:CREATE INDEX "IDX_9950eae3180f39c71978748bd0" ON public.stock_level USING btree ("productVariantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4460:CREATE INDEX "IDX_a51dfbd87c330c075c39832b6e" ON public.product_channels_channel USING btree ("channelId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4467:CREATE INDEX "IDX_a6debf9198e2fbfa006aa10d71" ON public.product_option USING btree ("groupId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4474:CREATE INDEX "IDX_a6e91739227bf4d442f23c52c7" ON public.product_option_group USING btree ("productId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4481:CREATE INDEX "IDX_a79a443c1f7841f3851767faa6" ON public.product_option_translation USING btree ("baseId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4544:CREATE INDEX "IDX_beeb2b3cd800e589f2213ae99d" ON public.product_variant_channels_channel USING btree ("productVariantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4593:CREATE INDEX "IDX_cbcd22193eda94668e84d33f18" ON public.order_line USING btree ("productVariantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4628:CREATE INDEX "IDX_d194bff171b62357688a5d0f55" ON public.product_variant_channels_channel USING btree ("channelId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4649:CREATE INDEX "IDX_d8791f444a8bf23fe4c1bc020c" ON public.search_index_item USING btree ("productVariantName");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4712:CREATE INDEX "IDX_e38dca0d82fd64c7cf8aac8b8e" ON public.product_variant USING btree ("taxCategoryId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4719:CREATE INDEX "IDX_e6126cd268aea6e9b31d89af9a" ON public.product_variant_price USING btree ("variantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4726:CREATE INDEX "IDX_e65ba3882557cab4febb54809b" ON public.stock_movement USING btree ("productVariantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4733:CREATE INDEX "IDX_e96a71affe63c97f7fa2f076da" ON public.product_variant_options_product_option USING btree ("productOptionId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4775:CREATE INDEX "IDX_f4a2ec16ba86d277b6faa0b67b" ON public.product_translation USING btree (slug);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4789:CREATE INDEX "IDX_fa21412afac15a2304f3eb35fe" ON public.product_variant_asset USING btree ("productVariantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4796:CREATE INDEX "IDX_fb05887e2867365f236d7dd95e" ON public.collection_product_variants_product_variant USING btree ("productVariantId");
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4837:-- Name: product_facet_values_facet_value FK_06e7d73673ee630e8ec50d0b29f; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4840:ALTER TABLE ONLY public.product_facet_values_facet_value
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4845:-- Name: product_asset FK_0d1294f5c22a56da7845ebab72c; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4848:ALTER TABLE ONLY public.product_asset
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4849:    ADD CONSTRAINT "FK_0d1294f5c22a56da7845ebab72c" FOREIGN KEY ("productId") REFERENCES public.product(id) ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4853:-- Name: product_variant_facet_values_facet_value FK_0d641b761ed1dce4ef3cd33d559; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4856:ALTER TABLE ONLY public.product_variant_facet_values_facet_value
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4869:-- Name: product_variant FK_0e6f516053cf982b537836e21cf; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4872:ALTER TABLE ONLY public.product_variant
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4885:-- Name: product_variant_asset FK_10b5a2e3dee0e30b1e26c32f5c7; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4888:ALTER TABLE ONLY public.product_variant_asset
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4981:-- Name: product_channels_channel FK_26d12be3b5fec6c4adb1d792844; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4984:ALTER TABLE ONLY public.product_channels_channel
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:4985:    ADD CONSTRAINT "FK_26d12be3b5fec6c4adb1d792844" FOREIGN KEY ("productId") REFERENCES public.product(id) ON UPDATE CASCADE ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5053:-- Name: product_variant_translation FK_420f4d6fb75d38b9dca79bc43b4; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5056:ALTER TABLE ONLY public.product_variant_translation
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5057:    ADD CONSTRAINT "FK_420f4d6fb75d38b9dca79bc43b4" FOREIGN KEY ("baseId") REFERENCES public.product_variant(id) ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5117:-- Name: product_variant_options_product_option FK_526f0131260eec308a3bd2b61b6; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5120:ALTER TABLE ONLY public.product_variant_options_product_option
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5121:    ADD CONSTRAINT "FK_526f0131260eec308a3bd2b61b6" FOREIGN KEY ("productVariantId") REFERENCES public.product_variant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5125:-- Name: product_asset FK_5888ac17b317b93378494a10620; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5128:ALTER TABLE ONLY public.product_asset
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5173:-- Name: product_variant_facet_values_facet_value FK_69567bc225b6bbbd732d6c5455b; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5176:ALTER TABLE ONLY public.product_variant_facet_values_facet_value
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5177:    ADD CONSTRAINT "FK_69567bc225b6bbbd732d6c5455b" FOREIGN KEY ("productVariantId") REFERENCES public.product_variant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5181:-- Name: product_facet_values_facet_value FK_6a0558e650d75ae639ff38e413a; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5184:ALTER TABLE ONLY public.product_facet_values_facet_value
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5185:    ADD CONSTRAINT "FK_6a0558e650d75ae639ff38e413a" FOREIGN KEY ("productId") REFERENCES public.product(id) ON UPDATE CASCADE ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5197:-- Name: product_variant FK_6e420052844edf3a5506d863ce6; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5200:ALTER TABLE ONLY public.product_variant
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5201:    ADD CONSTRAINT "FK_6e420052844edf3a5506d863ce6" FOREIGN KEY ("productId") REFERENCES public.product(id);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5205:-- Name: collection_product_variants_product_variant FK_6faa7b72422d9c4679e2f186ad1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5208:ALTER TABLE ONLY public.collection_product_variants_product_variant
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5261:-- Name: product_translation FK_7dbc75cb4e8b002620c4dbfdac5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5264:ALTER TABLE ONLY public.product_translation
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5265:    ADD CONSTRAINT "FK_7dbc75cb4e8b002620c4dbfdac5" FOREIGN KEY ("baseId") REFERENCES public.product(id);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5301:-- Name: product FK_91a19e6613534949a4ce6e76ff8; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5304:ALTER TABLE ONLY public.product
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5317:-- Name: product_option_group_translation FK_93751abc1451972c02e033b766c; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5320:ALTER TABLE ONLY public.product_option_group_translation
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5321:    ADD CONSTRAINT "FK_93751abc1451972c02e033b766c" FOREIGN KEY ("baseId") REFERENCES public.product_option_group(id) ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5345:    ADD CONSTRAINT "FK_9950eae3180f39c71978748bd08" FOREIGN KEY ("productVariantId") REFERENCES public.product_variant(id) ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5381:-- Name: product_channels_channel FK_a51dfbd87c330c075c39832b6e7; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5384:ALTER TABLE ONLY public.product_channels_channel
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5389:-- Name: product_option FK_a6debf9198e2fbfa006aa10d710; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5392:ALTER TABLE ONLY public.product_option
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5393:    ADD CONSTRAINT "FK_a6debf9198e2fbfa006aa10d710" FOREIGN KEY ("groupId") REFERENCES public.product_option_group(id);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5397:-- Name: product_option_group FK_a6e91739227bf4d442f23c52c75; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5400:ALTER TABLE ONLY public.product_option_group
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5401:    ADD CONSTRAINT "FK_a6e91739227bf4d442f23c52c75" FOREIGN KEY ("productId") REFERENCES public.product(id);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5405:-- Name: product_option_translation FK_a79a443c1f7841f3851767faa6d; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5408:ALTER TABLE ONLY public.product_option_translation
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5409:    ADD CONSTRAINT "FK_a79a443c1f7841f3851767faa6d" FOREIGN KEY ("baseId") REFERENCES public.product_option(id) ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5469:-- Name: product_variant_channels_channel FK_beeb2b3cd800e589f2213ae99d6; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5472:ALTER TABLE ONLY public.product_variant_channels_channel
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5473:    ADD CONSTRAINT "FK_beeb2b3cd800e589f2213ae99d6" FOREIGN KEY ("productVariantId") REFERENCES public.product_variant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5537:    ADD CONSTRAINT "FK_cbcd22193eda94668e84d33f185" FOREIGN KEY ("productVariantId") REFERENCES public.product_variant(id) ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5573:-- Name: product_variant_channels_channel FK_d194bff171b62357688a5d0f559; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5576:ALTER TABLE ONLY public.product_variant_channels_channel
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5661:-- Name: product_variant FK_e38dca0d82fd64c7cf8aac8b8ef; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5664:ALTER TABLE ONLY public.product_variant
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5669:-- Name: product_variant_price FK_e6126cd268aea6e9b31d89af9ab; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5672:ALTER TABLE ONLY public.product_variant_price
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5673:    ADD CONSTRAINT "FK_e6126cd268aea6e9b31d89af9ab" FOREIGN KEY ("variantId") REFERENCES public.product_variant(id) ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5681:    ADD CONSTRAINT "FK_e65ba3882557cab4febb54809bb" FOREIGN KEY ("productVariantId") REFERENCES public.product_variant(id);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5685:-- Name: product_variant_options_product_option FK_e96a71affe63c97f7fa2f076dac; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5688:ALTER TABLE ONLY public.product_variant_options_product_option
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5689:    ADD CONSTRAINT "FK_e96a71affe63c97f7fa2f076dac" FOREIGN KEY ("productOptionId") REFERENCES public.product_option(id);
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5741:-- Name: product_variant_asset FK_fa21412afac15a2304f3eb35feb; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5744:ALTER TABLE ONLY public.product_variant_asset
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5745:    ADD CONSTRAINT "FK_fa21412afac15a2304f3eb35feb" FOREIGN KEY ("productVariantId") REFERENCES public.product_variant(id) ON DELETE CASCADE;
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5749:-- Name: collection_product_variants_product_variant FK_fb05887e2867365f236d7dd95ee; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5752:ALTER TABLE ONLY public.collection_product_variants_product_variant
+C:\Users\qalam\OneDrive\Desktop\ena_backend\ena_backend\schema.sql:5753:    ADD CONSTRAINT "FK_fb05887e2867365f236d7dd95ee" FOREIGN KEY ("productVariantId") REFERENCES public.product_variant(id);

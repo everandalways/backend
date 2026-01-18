@@ -12,15 +12,29 @@ export class GoogleAuthController {
         // Initiates Google OAuth flow
     }
 
-    @Get('google/callback')
-    @UseGuards(AuthGuard('google'))
-    async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-        // Handle Google OAuth callback
-        const user = req.user;
-        console.log('Google Auth Success:', user);
-        // Redirect to your frontend with success
-        res.redirect(`http://localhost:3000/auth/success`);
+@Get('google/callback')
+@UseGuards(AuthGuard('google'))
+async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    console.log('Google OAuth callback hit');
+    try {
+        const user = req.user as any;
+        
+        console.log('Google user data:', user); // Debug log
+        
+        if (!user || !user.email) {
+            console.error('No user data from Google');
+            return res.redirect('http://localhost:8002/account/sign-in?error=no-user-data');
+        }
+
+        // For now, just redirect with user info
+        // We'll add proper customer creation next
+        return res.redirect(`http://localhost:8002/account?email=${user.email}&name=${user.firstName}`);
+        
+    } catch (error) {
+        console.error('Google OAuth callback error:', error);
+        return res.redirect('http://localhost:8002/account/sign-in?error=callback-failed');
     }
+}
 }
 
 @VendurePlugin({
