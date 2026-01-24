@@ -103,7 +103,7 @@ export const config: VendureConfig = {
             // For local dev, the correct value for assetUrlPrefix should
             // be guessed correctly, but for production it will usually need
             // to be set manually to match your production url.
-            assetUrlPrefix: IS_DEV ? undefined : process.env.ASSET_URL_PREFIX || `${backendUrl}/assets/`,
+            assetUrlPrefix: IS_DEV ? undefined : process.env.ASSET_URL_PREFIX || (backendUrl ? `${backendUrl}/assets/` : undefined),
         }),
         DefaultSchedulerPlugin.init(),
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
@@ -137,14 +137,8 @@ export const config: VendureConfig = {
             route: 'admin',
             port: IS_DEV ? serverPort + 2 : serverPort, // In production, use same port as API
             adminUiConfig: {
-                // In production, don't set apiHost/apiPort - use relative URLs (same domain)
-                // This avoids port issues with Railway's port mapping
-                ...(IS_DEV ? {
-                    apiPort: serverPort,
-                } : {
-                    // In production: omit apiHost and apiPort to use relative URLs
-                    // Admin UI will make requests to /admin-api (same domain, no port)
-                }),
+                apiHost: IS_DEV ? undefined : backendUrl, // Use BACKEND_URL in production (without port)
+                apiPort: IS_DEV ? serverPort : undefined, // Don't specify port in production (Railway handles it)
                 brand: 'Ever & Always', // Replace with your client's brand name
                 hideVendureBranding: true,   // This removes Vendure branding
                 hideVersion: true,           // Hides version info
