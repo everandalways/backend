@@ -17,17 +17,22 @@ import { RateLimitPlugin } from './plugins/rate-limit.plugin';
 
 const IS_DEV = process.env.APP_ENV === 'dev';
 const serverPort = +process.env.PORT || 3000;
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8002';
+const backendUrl = process.env.BACKEND_URL || 'http://localhost:3000';
 
 export const config: VendureConfig = {
     apiOptions: {
-    port: serverPort,
-    adminApiPath: 'admin-api',
-    shopApiPath: 'shop-api',
-    trustProxy: IS_DEV ? false : 1,
-    cors: {
-        origin: ['http://localhost:3000', 'http://localhost:8002'], // Add frontend URLs
-        credentials: true,
-    },
+        hostname: process.env.HOST || '0.0.0.0', // Bind to all interfaces for Railway
+        port: serverPort,
+        adminApiPath: 'admin-api',
+        shopApiPath: 'shop-api',
+        trustProxy: IS_DEV ? false : 1,
+        cors: {
+            origin: IS_DEV
+                ? ['http://localhost:3000', 'http://localhost:8002']
+                : [frontendUrl, backendUrl], // Use environment variables in production
+            credentials: true,
+        },
         // The following options are useful in development mode,
         // but are best turned off for production for security
         // reasons.
@@ -38,13 +43,13 @@ export const config: VendureConfig = {
     },
     authOptions: {
         tokenMethod: ['bearer', 'cookie'],
-         requireVerification: true,
+        requireVerification: true,
         superadminCredentials: {
             identifier: process.env.SUPERADMIN_USERNAME,
             password: process.env.SUPERADMIN_PASSWORD,
         },
         cookieOptions: {
-          secret: process.env.COOKIE_SECRET,
+            secret: process.env.COOKIE_SECRET,
         },
     },
     dbConnectionOptions: {
@@ -76,50 +81,50 @@ export const config: VendureConfig = {
             // For local dev, the correct value for assetUrlPrefix should
             // be guessed correctly, but for production it will usually need
             // to be set manually to match your production url.
-            assetUrlPrefix: IS_DEV ? undefined : 'https://www.my-shop.com/assets/',
+            assetUrlPrefix: IS_DEV ? undefined : process.env.ASSET_URL_PREFIX || `${backendUrl}/assets/`,
         }),
         DefaultSchedulerPlugin.init(),
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
         DefaultSearchPlugin.init({ bufferUpdates: false, indexStockStatus: true }),
-EmailPlugin.init({
-   
-    transport: {
-        type: 'smtp',
-        host: 'smtp.hostinger.com',
-        port: 465,
-        secure: true,  // true for port 465
-        auth: {
-            user: 'orders@everandalways.store',
-            pass: 'Saif.110tmkfc',
-        },
-    },
-    handlers: defaultEmailHandlers,
-    templateLoader: new FileBasedTemplateLoader(path.join(__dirname, '../static/email/templates')),
-    globalTemplateVars: {
-        fromAddress: '"Ever & Always" <orders@everandalways.store>',
-        verifyEmailAddressUrl: 'http://localhost:8002/verify',
-        passwordResetUrl: 'http://localhost:8002/account/password',
-        changeEmailAddressUrl: 'http://localhost:8002/verify-email-change'
-    },
-}),
+        EmailPlugin.init({
+
+            transport: {
+                type: 'smtp',
+                host: 'smtp.hostinger.com',
+                port: 465,
+                secure: true,  // true for port 465
+                auth: {
+                    user: 'orders@everandalways.store',
+                    pass: 'Saif.110tmkfc',
+                },
+            },
+            handlers: defaultEmailHandlers,
+            templateLoader: new FileBasedTemplateLoader(path.join(__dirname, '../static/email/templates')),
+            globalTemplateVars: {
+                fromAddress: '"Ever & Always" <orders@everandalways.store>',
+                verifyEmailAddressUrl: `${frontendUrl}/verify`,
+                passwordResetUrl: `${frontendUrl}/account/password`,
+                changeEmailAddressUrl: `${frontendUrl}/verify-email-change`
+            },
+        }),
         // Uncomment the following to enable Stripe payments.
-            StripePlugin.init({
-        storeCustomersInStripe: true,
-    }),
-AdminUiPlugin.init({
-    route: 'admin',
-    port: serverPort + 2,
-    adminUiConfig: {
-        apiPort: serverPort,
-        brand: 'Ever & Always', // Replace with your client's brand name
-        hideVendureBranding: true,   // This removes Vendure branding
-        hideVersion: true,           // Hides version info
-    },
-    // app: {
-    //     // We'll add custom CSS and branding here
-    // }
-}),
-  GoogleAuthPlugin,
+        StripePlugin.init({
+            storeCustomersInStripe: true,
+        }),
+        AdminUiPlugin.init({
+            route: 'admin',
+            port: IS_DEV ? serverPort + 2 : serverPort, // In production, use same port as API
+            adminUiConfig: {
+                apiPort: serverPort,
+                brand: 'Ever & Always', // Replace with your client's brand name
+                hideVendureBranding: true,   // This removes Vendure branding
+                hideVersion: true,           // Hides version info
+            },
+            // app: {
+            //     // We'll add custom CSS and branding here
+            // }
+        }),
+        GoogleAuthPlugin,
         RateLimitPlugin,
     ],
 };

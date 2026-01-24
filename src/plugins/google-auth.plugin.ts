@@ -3,6 +3,9 @@ import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { GoogleStrategy } from '../strategies/google.strategy';
+import 'dotenv/config';
+
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8002';
 
 @Controller('auth')
 export class GoogleAuthController {
@@ -23,16 +26,16 @@ async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
         
         if (!user || !user.email) {
             console.error('No user data from Google');
-            return res.redirect('http://localhost:8002/account/sign-in?error=no-user-data');
+            return res.redirect(`${frontendUrl}/account/sign-in?error=no-user-data`);
         }
 
         // For now, just redirect with user info
         // We'll add proper customer creation next
-        return res.redirect(`http://localhost:8002/account?email=${user.email}&name=${user.firstName}`);
+        return res.redirect(`${frontendUrl}/account?email=${user.email}&name=${user.firstName}`);
         
     } catch (error) {
         console.error('Google OAuth callback error:', error);
-        return res.redirect('http://localhost:8002/account/sign-in?error=callback-failed');
+        return res.redirect(`${frontendUrl}/account/sign-in?error=callback-failed`);
     }
 }
 }

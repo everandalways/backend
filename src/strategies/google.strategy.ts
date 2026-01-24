@@ -6,10 +6,13 @@ import 'dotenv/config';
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     constructor() {
+        const backendUrl = process.env.BACKEND_URL || 'http://localhost:3000';
+        const callbackURL = process.env.GOOGLE_CALLBACK_URL || `${backendUrl}/auth/google/callback`;
+        
         super({
             clientID: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            callbackURL: process.env.GOOGLE_CALLBACK_URL!,
+            callbackURL,
             scope: ['email', 'profile'],
         });
     }
