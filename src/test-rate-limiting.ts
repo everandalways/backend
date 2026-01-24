@@ -26,7 +26,7 @@ async function testRateLimitingSequential(apiUrl: string, requestCount: number =
     
     let successCount = 0;
     let rateLimitedCount = 0;
-    let errors = [];
+    let errors: string[] = [];
     
     for (let i = 1; i <= requestCount; i++) {
         try {
@@ -47,7 +47,8 @@ async function testRateLimitingSequential(apiUrl: string, requestCount: number =
             
             process.stdout.write(`\rProgress: ${i}/${requestCount}`);
         } catch (error) {
-            errors.push(`Request ${i}: ${error.message}`);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            errors.push(`Request ${i}: ${errorMessage}`);
         }
     }
     
