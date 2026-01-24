@@ -18,7 +18,29 @@ import { RateLimitPlugin } from './plugins/rate-limit.plugin';
 const IS_DEV = process.env.APP_ENV === 'dev';
 const serverPort = +process.env.PORT || 3000;
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8002';
-const backendUrl = process.env.BACKEND_URL || 'http://localhost:3000';
+
+// Auto-detect Railway URL if BACKEND_URL is not set
+// Railway provides RAILWAY_PUBLIC_DOMAIN automatically
+const getBackendUrl = () => {
+    if (IS_DEV) {
+        return process.env.BACKEND_URL || 'http://localhost:3000';
+    }
+
+    // In production, try to get URL from environment
+    if (process.env.BACKEND_URL) {
+        return process.env.BACKEND_URL.replace(/:\d+$/, ''); // Remove port
+    }
+
+    // Railway automatically provides this
+    if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+        return `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
+    }
+
+    // Fallback: use relative URLs (Admin UI and API on same domain)
+    return undefined;
+};
+
+const backendUrl = getBackendUrl();
 
 export const config: VendureConfig = {
     apiOptions: {
@@ -30,7 +52,7 @@ export const config: VendureConfig = {
         cors: {
             origin: IS_DEV
                 ? ['http://localhost:3000', 'http://localhost:8002']
-                : [frontendUrl, backendUrl], // Use environment variables in production
+                : [frontendUrl, backendUrl].filter((url): url is string => url !== undefined), // Filter out undefined values
             credentials: true,
         },
         // The following options are useful in development mode,
@@ -115,7 +137,9 @@ export const config: VendureConfig = {
             route: 'admin',
             port: IS_DEV ? serverPort + 2 : serverPort, // In production, use same port as API
             adminUiConfig: {
-                apiPort: serverPort,
+                // If backendUrl is undefined, Admin UI will use relative URLs (same domain)
+                apiHost: IS_DEV ? undefined : backendUrl,
+                apiPort: IS_DEV ? serverPort : undefined, // Don't specify port in production (Railway handles it)
                 brand: 'Ever & Always', // Replace with your client's brand name
                 hideVendureBranding: true,   // This removes Vendure branding
                 hideVersion: true,           // Hides version info
