@@ -31,8 +31,18 @@ import { getThrottlerConfig } from '../config/throttler.config';
  */
 export class CustomThrottlerGuard extends ThrottlerGuard {
     protected async shouldSkip(context: any): Promise<boolean> {
-        // Check if the request should be skipped based on skipThrottle property
-        const request = context.switchToHttp().getRequest();
+        // Try to get HTTP request, but handle cases where context is not HTTP (e.g., GraphQL)
+        const httpContext = context.switchToHttp();
+        if (!httpContext) {
+            // Not an HTTP context, fall back to default behavior
+            return super.shouldSkip(context);
+        }
+        
+        const request = httpContext.getRequest();
+        if (!request) {
+            // No request object available, fall back to default behavior
+            return super.shouldSkip(context);
+        }
         
         // Skip throttling if explicitly marked (by middleware)
         if ((request as any).skipThrottle) {
@@ -40,10 +50,10 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
         }
 
         // Check if this is a Stripe webhook request
-        const path = request.path.toLowerCase();
-        const method = request.method.toUpperCase();
+        const path = request.path?.toLowerCase();
+        const method = request.method?.toUpperCase();
         
-        if (method === 'POST') {
+        if (method === 'POST' && path) {
             const stripeWebhookPatterns = [
                 '/payments/stripe/webhook',
                 '/stripe/webhook',
