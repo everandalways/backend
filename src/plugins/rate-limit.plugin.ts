@@ -28,8 +28,25 @@ import { getThrottlerConfig } from '../config/throttler.config';
 
 /**
  * Custom ThrottlerGuard that skips rate limiting for Stripe webhooks
+ * and properly handles IP extraction behind proxies (Railway)
  */
 export class CustomThrottlerGuard extends ThrottlerGuard {
+    /**
+     * Override getTracker to properly extract IP from proxied requests
+     */
+    protected async getTracker(req: Record<string, any>): Promise<string> {
+        // Try to get IP from various sources (handles Railway proxy)
+        const ip =
+            req.ip ||
+            req.connection?.remoteAddress ||
+            req.socket?.remoteAddress ||
+            (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
+            req.headers['x-real-ip'] as string ||
+            'unknown';
+
+        return ip;
+    }
+
     protected async shouldSkip(context: any): Promise<boolean> {
         // Try to get HTTP request, but handle cases where context is not HTTP (e.g., GraphQL)
         const httpContext = context.switchToHttp();
@@ -37,13 +54,13 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
             // Not an HTTP context, fall back to default behavior
             return super.shouldSkip(context);
         }
-        
+
         const request = httpContext.getRequest();
         if (!request) {
             // No request object available, fall back to default behavior
             return super.shouldSkip(context);
         }
-        
+
         // Skip throttling if explicitly marked (by middleware)
         if ((request as any).skipThrottle) {
             return true;
@@ -52,14 +69,14 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
         // Check if this is a Stripe webhook request
         const path = request.path?.toLowerCase();
         const method = request.method?.toUpperCase();
-        
+
         if (method === 'POST' && path) {
             const stripeWebhookPatterns = [
                 '/payments/stripe/webhook',
                 '/stripe/webhook',
                 '/api/webhooks/stripe',
             ];
-            
+
             if (stripeWebhookPatterns.some(pattern => path.includes(pattern))) {
                 return true;
             }
@@ -81,9 +98,9 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
         },
     ],
 })
-export class RateLimitModule {}
+export class RateLimitModule { }
 
 @VendurePlugin({
     imports: [PluginCommonModule, RateLimitModule],
 })
-export class RateLimitPlugin {}
+export class RateLimitPlugin { }
