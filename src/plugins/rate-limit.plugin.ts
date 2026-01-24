@@ -2,6 +2,8 @@ import { PluginCommonModule, VendurePlugin } from '@vendure/core';
 import { Module } from '@nestjs/common';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ExecutionContext } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { getThrottlerConfig } from '../config/throttler.config';
 
 /**
@@ -32,16 +34,40 @@ import { getThrottlerConfig } from '../config/throttler.config';
  */
 export class CustomThrottlerGuard extends ThrottlerGuard {
     /**
+     * Override getRequestResponse to properly handle GraphQL context
+     */
+    getRequestResponse(context: ExecutionContext) {
+        // Try GraphQL context first
+        try {
+            const gqlContext = GqlExecutionContext.create(context);
+            const ctx = gqlContext.getContext();
+            if (ctx?.req && ctx?.res) {
+                return { req: ctx.req, res: ctx.res };
+            }
+        } catch {
+            // Not a GraphQL context, continue to HTTP context
+        }
+
+        // Fall back to HTTP context
+        return super.getRequestResponse(context);
+    }
+
+    /**
      * Override getTracker to properly extract IP from proxied requests
      */
     protected async getTracker(req: Record<string, any>): Promise<string> {
+        // Handle undefined or null request
+        if (!req) {
+            return 'unknown';
+        }
+
         // Try to get IP from various sources (handles Railway proxy)
         const ip =
             req.ip ||
             req.connection?.remoteAddress ||
             req.socket?.remoteAddress ||
-            (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
-            req.headers['x-real-ip'] as string ||
+            (req.headers?.['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
+            req.headers?.['x-real-ip'] as string ||
             'unknown';
 
         return ip;
