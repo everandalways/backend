@@ -137,9 +137,14 @@ export const config: VendureConfig = {
             route: 'admin',
             port: IS_DEV ? serverPort + 2 : serverPort, // In production, use same port as API
             adminUiConfig: {
-                // If backendUrl is undefined, Admin UI will use relative URLs (same domain)
-                apiHost: IS_DEV ? undefined : backendUrl,
-                apiPort: IS_DEV ? serverPort : undefined, // Don't specify port in production (Railway handles it)
+                // In production, don't set apiHost/apiPort - use relative URLs (same domain)
+                // This avoids port issues with Railway's port mapping
+                ...(IS_DEV ? {
+                    apiPort: serverPort,
+                } : {
+                    // In production: omit apiHost and apiPort to use relative URLs
+                    // Admin UI will make requests to /admin-api (same domain, no port)
+                }),
                 brand: 'Ever & Always', // Replace with your client's brand name
                 hideVendureBranding: true,   // This removes Vendure branding
                 hideVersion: true,           // Hides version info
