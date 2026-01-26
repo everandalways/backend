@@ -129,9 +129,11 @@ export const config: VendureConfig = {
                 changeEmailAddressUrl: `${frontendUrl}/verify-email-change`
             },
         }),
-        // Uncomment the following to enable Stripe payments.
+        // Stripe payments configuration
         StripePlugin.init({
+            apiKey: process.env.STRIPE_SECRET_KEY || '',
             storeCustomersInStripe: true,
+            webhookSigningSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
         }),
         AdminUiPlugin.init({
             route: 'admin',
