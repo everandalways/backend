@@ -130,10 +130,10 @@ export const config: VendureConfig = {
             },
         }),
         // Stripe payments configuration
+        // Note: API key and webhook secret are configured in Admin UI → Settings → Payment Methods
+        // The plugin itself only needs minimal configuration here
         StripePlugin.init({
-            apiKey: process.env.STRIPE_SECRET_KEY || '',
             storeCustomersInStripe: true,
-            webhookSigningSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
         }),
         AdminUiPlugin.init({
             route: 'admin',
