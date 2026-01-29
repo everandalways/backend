@@ -116,14 +116,14 @@ export const config: VendureConfig = {
                 port: 465,
                 secure: true,  // true for port 465
                 auth: {
-                    user: 'orders@everandalways.store',
-                    pass: 'Saif.110tmkfc',
+                    user: process.env.SMTP_USER,
+                    pass: process.env.SMTP_PASS,
                 },
             },
             handlers: defaultEmailHandlers,
             templateLoader: new FileBasedTemplateLoader(path.join(__dirname, '../static/email/templates')),
             globalTemplateVars: {
-                fromAddress: '"Ever & Always" <orders@everandalways.store>',
+                fromAddress: `"Ever & Always" <${process.env.SMTP_USER}>`,
                 verifyEmailAddressUrl: `${frontendUrl}/verify`,
                 passwordResetUrl: `${frontendUrl}/account/password`,
                 changeEmailAddressUrl: `${frontendUrl}/verify-email-change`
