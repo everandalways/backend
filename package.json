@@ -10,7 +10,7 @@
     "start:server": "node ./dist/index.js",
     "start:worker": "node ./dist/index-worker.js",
     "start": "concurrently npm:start:*",
-    "import": "ts-node ./src/scripts/import-products.ts"
+    "import": "npx ts-node ./src/scripts/import-products.ts"
   },
   "dependencies": {
     "@nestjs/passport": "^11.0.5",
@@ -33,6 +33,7 @@
     "@vendure/cli": "3.4.2",
     "@vendure/create": "^3.4.3",
     "concurrently": "9.2.1",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "ts-node": "^10.9.2"
   }
 }
