@@ -113,6 +113,7 @@ export const config: VendureConfig = {
                     nativeS3Configuration: {
                         region: 'auto',
                         endpoint: process.env.R2_ENDPOINT,
+                        forcePathStyle: true,
                     },
                 })
                 : undefined,
