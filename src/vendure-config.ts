@@ -102,12 +102,10 @@ export const config: VendureConfig = {
             assetUploadDir: IS_DEV
                 ? path.join(__dirname, '../static/assets')
                 : '/tmp/vendure-assets',
-            assetUrlPrefix: IS_DEV
-                ? undefined
-                : process.env.R2_PUBLIC_URL,
-            ...(IS_DEV ? {} : {
-                storageStrategyFactory: configureS3AssetStorage({
-                    bucket: process.env.R2_BUCKET_NAME!,
+            assetUrlPrefix: process.env.R2_PUBLIC_URL,
+            storageStrategyFactory: process.env.R2_BUCKET_NAME
+                ? configureS3AssetStorage({
+                    bucket: process.env.R2_BUCKET_NAME,
                     credentials: {
                         accessKeyId: process.env.R2_ACCESS_KEY_ID!,
                         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
@@ -116,8 +114,8 @@ export const config: VendureConfig = {
                         region: 'auto',
                         endpoint: process.env.R2_ENDPOINT,
                     },
-                }),
-            }),
+                })
+                : undefined,
         }),
         DefaultSchedulerPlugin.init(),
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
