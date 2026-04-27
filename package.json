@@ -29,7 +29,9 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "8.16.3",
-    "stripe": "^13.11.0"
+    "stripe": "^13.11.0",
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/lib-storage": "^3.600.0"
   },
   "devDependencies": {
     "@vendure/cli": "3.4.2",

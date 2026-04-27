@@ -6,7 +6,7 @@ import {
     VendureConfig,
 } from '@vendure/core';
 import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
-import { AssetServerPlugin } from '@vendure/asset-server-plugin';
+import { AssetServerPlugin, configureS3AssetStorage } from '@vendure/asset-server-plugin';
 import { AdminUiPlugin } from '@vendure/admin-ui-plugin';
 import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
 import 'dotenv/config';
@@ -99,11 +99,25 @@ export const config: VendureConfig = {
         ...(IS_DEV ? [GraphiqlPlugin.init()] : []),
         AssetServerPlugin.init({
             route: 'assets',
-            assetUploadDir: path.join(__dirname, '../static/assets'),
-            // For local dev, the correct value for assetUrlPrefix should
-            // be guessed correctly, but for production it will usually need
-            // to be set manually to match your production url.
-            assetUrlPrefix: IS_DEV ? undefined : process.env.ASSET_URL_PREFIX || (backendUrl ? `${backendUrl}/assets/` : undefined),
+            assetUploadDir: IS_DEV
+                ? path.join(__dirname, '../static/assets')
+                : '/tmp/vendure-assets',
+            assetUrlPrefix: IS_DEV
+                ? undefined
+                : process.env.R2_PUBLIC_URL,
+            ...(IS_DEV ? {} : {
+                storageStrategyFactory: configureS3AssetStorage({
+                    bucket: process.env.R2_BUCKET_NAME!,
+                    credentials: {
+                        accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+                        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+                    },
+                    nativeS3Configuration: {
+                        region: 'auto',
+                        endpoint: process.env.R2_ENDPOINT,
+                    },
+                }),
+            }),
         }),
         DefaultSchedulerPlugin.init(),
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
