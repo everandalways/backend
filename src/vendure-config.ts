@@ -116,7 +116,7 @@ export const config: VendureConfig = {
             assetUploadDir: IS_DEV
                 ? path.join(__dirname, '../static/assets')
                 : '/tmp/vendure-assets',
-            assetUrlPrefix: process.env.R2_PUBLIC_URL,
+            assetUrlPrefix: process.env.R2_PUBLIC_URL?.trim(),
             storageStrategyFactory: process.env.R2_BUCKET_NAME
                 ? configureS3AssetStorage({
                     bucket: process.env.R2_BUCKET_NAME,
