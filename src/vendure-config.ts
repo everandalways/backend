@@ -17,6 +17,20 @@ import { RateLimitPlugin } from './plugins/rate-limit.plugin';
 
 const IS_DEV = process.env.APP_ENV === 'dev';
 const serverPort = +process.env.PORT || 3000;
+
+// Validate R2 config at startup so failures are obvious immediately
+if (process.env.R2_BUCKET_NAME) {
+    const r2endpoint = process.env.R2_ENDPOINT?.trim();
+    if (!r2endpoint) {
+        throw new Error('[R2] R2_ENDPOINT env var is missing or empty');
+    }
+    try {
+        new URL(r2endpoint);
+    } catch {
+        throw new Error(`[R2] R2_ENDPOINT is not a valid URL: "${r2endpoint}"`);
+    }
+    console.log(`[R2] Configured — bucket: ${process.env.R2_BUCKET_NAME}, endpoint: ${r2endpoint}`);
+}
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8002';
 
 // Auto-detect Railway URL if BACKEND_URL is not set
