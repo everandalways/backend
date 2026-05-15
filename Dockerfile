@@ -39,4 +39,3 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
 
 # Start the server + worker (Railway will use this)
 CMD ["npm", "run", "start:prod"]
-#prompt 2
