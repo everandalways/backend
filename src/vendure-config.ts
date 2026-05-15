@@ -31,6 +31,24 @@ if (process.env.R2_BUCKET_NAME) {
     }
     console.log(`[R2] Configured — bucket: ${process.env.R2_BUCKET_NAME}, endpoint: ${r2endpoint}`);
 }
+
+// In production, R2 is mandatory — fail loud at startup rather than silently
+// falling back to ephemeral local disk (which loses uploads on redeploy).
+if (!IS_DEV) {
+    const requiredR2Vars = [
+        'R2_BUCKET_NAME',
+        'R2_ACCESS_KEY_ID',
+        'R2_SECRET_ACCESS_KEY',
+        'R2_ENDPOINT',
+        'R2_PUBLIC_URL',
+    ] as const;
+    for (const varName of requiredR2Vars) {
+        if (!process.env[varName]?.trim()) {
+            throw new Error(`[R2] ${varName} env var is required in production (APP_ENV !== 'dev') but is missing or empty`);
+        }
+    }
+}
+
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8002';
 
 // Auto-detect Railway URL if BACKEND_URL is not set
@@ -113,6 +131,8 @@ export const config: VendureConfig = {
         ...(IS_DEV ? [GraphiqlPlugin.init()] : []),
         AssetServerPlugin.init({
             route: 'assets',
+            // In prod this is a transient buffer for multipart upload reassembly and
+            // image-transform processing only — actual persistent storage is R2.
             assetUploadDir: IS_DEV
                 ? path.join(__dirname, '../static/assets')
                 : '/tmp/vendure-assets',
