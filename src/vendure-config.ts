@@ -15,6 +15,73 @@ import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import { GoogleAuthPlugin } from './plugins/google-auth.plugin';
 import { RateLimitPlugin } from './plugins/rate-limit.plugin';
 
+function assertRequiredEnv(): void {
+    if (process.env.APP_ENV === 'dev') {
+        return;
+    }
+
+    const issues: string[] = [];
+
+    const cookieSecret = process.env.COOKIE_SECRET;
+    if (!cookieSecret) {
+        issues.push('COOKIE_SECRET is missing or empty');
+    } else if (cookieSecret.length < 32) {
+        issues.push(`COOKIE_SECRET must be at least 32 characters (got ${cookieSecret.length})`);
+    }
+
+    if (!process.env.SUPERADMIN_USERNAME) {
+        issues.push('SUPERADMIN_USERNAME is missing or empty');
+    }
+
+    const superadminPassword = process.env.SUPERADMIN_PASSWORD;
+    if (!superadminPassword) {
+        issues.push('SUPERADMIN_PASSWORD is missing or empty');
+    } else if (superadminPassword.length < 16) {
+        issues.push(`SUPERADMIN_PASSWORD must be at least 16 characters (got ${superadminPassword.length})`);
+    }
+
+    const simpleRequired = [
+        'DB_HOST',
+        'DB_PORT',
+        'DB_NAME',
+        'DB_USERNAME',
+        'DB_PASSWORD',
+        'SMTP_USER',
+        'SMTP_PASS',
+    ] as const;
+    for (const name of simpleRequired) {
+        if (!process.env[name]) {
+            issues.push(`${name} is missing or empty`);
+        }
+    }
+
+    const frontendUrl = process.env.FRONTEND_URL;
+    if (!frontendUrl) {
+        issues.push('FRONTEND_URL is missing or empty');
+    } else {
+        let parsed: URL | undefined;
+        try {
+            parsed = new URL(frontendUrl);
+        } catch {
+            issues.push(`FRONTEND_URL is not a valid URL: "${frontendUrl}"`);
+        }
+        if (parsed && parsed.protocol !== 'https:') {
+            issues.push(`FRONTEND_URL must use https:// in production (got "${frontendUrl}")`);
+        }
+    }
+
+    if (issues.length > 0) {
+        throw new Error(
+            [
+                '[STARTUP] Refusing to boot: the following required environment variables are missing or invalid:',
+                ...issues.map(issue => `  - ${issue}`),
+            ].join('\n'),
+        );
+    }
+}
+
+assertRequiredEnv();
+
 const IS_DEV = process.env.APP_ENV === 'dev';
 const serverPort = +process.env.PORT || 3000;
 
