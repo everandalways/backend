@@ -37,5 +37,6 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:${PORT:-3000}/shop-api', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Start the server (Railway will use this)
-CMD ["npm", "run", "start:server"]
+# Start the server + worker (Railway will use this)
+CMD ["npm", "run", "start:prod"]
+#prompt 2
