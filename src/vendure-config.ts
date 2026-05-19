@@ -12,7 +12,6 @@ import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
 import 'dotenv/config';
 import path from 'path';
 import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
-import { GoogleAuthPlugin } from './plugins/google-auth.plugin';
 import { RateLimitPlugin } from './plugins/rate-limit.plugin';
 
 function assertRequiredEnv(): void {
@@ -263,7 +262,6 @@ export const config: VendureConfig = {
             //     // We'll add custom CSS and branding here
             // }
         }),
-        GoogleAuthPlugin,
         RateLimitPlugin,
     ],
 };
