@@ -48,7 +48,7 @@ async function main(): Promise<void> {
     const expectedUrl = backendUrl.replace(/\/+$/, '') + WEBHOOK_PATH;
 
     const stripe = new Stripe(secretKey, {
-        apiVersion: '2023-10-16',
+        apiVersion: '2023-08-16',
     });
 
     console.log(`[verify:webhook] Expecting endpoint: ${expectedUrl}`);
