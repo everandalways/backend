@@ -1,4 +1,4 @@
-# Stripe Payment Integration Setup Guide
+﻿# Stripe Payment Integration Setup Guide
 
 This guide will help you set up Stripe payments with your Vendure e-commerce store using a Stripe testing account.
 
@@ -22,7 +22,7 @@ This guide will help you set up Stripe payments with your Vendure e-commerce sto
 2. Click **Add endpoint**
 3. Enter your webhook URL:
    - **Local development**: Use Stripe CLI (see below)
-   - **Production**: `https://your-domain.com/payments/stripe/webhook`
+   - **Production**: `https://your-domain.com/payments/stripe`
 4. Select events to listen to:
    - `payment_intent.succeeded`
    - `payment_intent.payment_failed`
@@ -44,7 +44,7 @@ For local testing, use Stripe CLI to forward webhooks:
 stripe login
 
 # Forward webhooks to your local server
-stripe listen --forward-to localhost:3000/payments/stripe/webhook
+stripe listen --forward-to localhost:3000/payments/stripe
 ```
 
 The CLI will display a webhook signing secret. Use this for `STRIPE_WEBHOOK_SECRET` in local development.

@@ -1,4 +1,4 @@
-# Rate Limiting Configuration Guide
+﻿# Rate Limiting Configuration Guide
 
 ## Overview
 
@@ -19,7 +19,7 @@ This document describes the production-safe rate limiting implementation for the
 
 ✅ **Excluded Routes (Webhook Processing)**
 
-- `POST /payments/stripe/webhook`
+- `POST /payments/stripe`
 - `POST /stripe/webhook`
 - `POST /api/webhooks/stripe`
 
@@ -260,7 +260,7 @@ ab -n 150 -c 10 http://production-url/shop-api/
 
 ```bash
 # Stripe webhooks should always succeed
-curl -X POST http://localhost:3000/payments/stripe/webhook \
+curl -X POST http://localhost:3000/payments/stripe \
   -H "Content-Type: application/json" \
   -d '{"type": "charge.succeeded", "data": {...}}'
 

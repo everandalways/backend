@@ -1,4 +1,4 @@
-# Production Deployment Checklist - Rate Limiting
+﻿# Production Deployment Checklist - Rate Limiting
 
 ## Pre-Deployment Verification
 
@@ -87,7 +87,7 @@ curl -X POST https://your-production-url/shop-api/ \
 curl -I https://your-production-url/shop-api/
 
 # Test Stripe webhook (should work even under rate limit)
-curl -X POST https://your-production-url/payments/stripe/webhook \
+curl -X POST https://your-production-url/payments/stripe \
   -H "Content-Type: application/json" \
   -H "Stripe-Signature: <valid-signature>" \
   -d '{"type":"charge.succeeded"}'
@@ -161,7 +161,7 @@ THROTTLE_LIMIT_PER_MINUTE=100
 
 - Check `src/plugins/rate-limit.plugin.ts` has correct route patterns
 - Verify Stripe webhook URL matches excluded pattern
-- Common patterns: `/payments/stripe/webhook`, `/stripe/webhook`
+- Common patterns: `/payments/stripe`, `/stripe/webhook`
 
 ### Issue: Legitimate users getting 429 errors
 

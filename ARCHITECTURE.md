@@ -1,4 +1,4 @@
-# Rate Limiting Architecture
+﻿# Rate Limiting Architecture
 
 ## System Overview
 
@@ -310,7 +310,7 @@ Client Request
 ```
 Stripe Event
     │
-    ├─ Method: POST /payments/stripe/webhook
+    ├─ Method: POST /payments/stripe
     ├─ Headers: { 'Stripe-Signature': '...' }
     └─ Body: { type: "charge.succeeded", ... }
          │

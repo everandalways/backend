@@ -1,4 +1,4 @@
-# Next Steps After Creating Stripe Webhook
+﻿# Next Steps After Creating Stripe Webhook
 
 Great! You've created the webhook in Stripe. Here's what you received and what to do next:
 
@@ -108,7 +108,7 @@ This ensures the new environment variables are loaded.
 
 3. **Forward webhooks to your local server**:
    ```bash
-   stripe listen --forward-to localhost:3000/payments/stripe/webhook
+   stripe listen --forward-to localhost:3000/payments/stripe
    ```
    
    This will display a webhook signing secret. **Use this secret** for local testing instead of the one from Stripe Dashboard.
@@ -157,7 +157,7 @@ This ensures the new environment variables are loaded.
 ### Webhook Shows as Failed in Stripe Dashboard
 
 **Possible causes:**
-1. **Wrong webhook URL**: Make sure it's `https://your-domain.com/payments/stripe/webhook`
+1. **Wrong webhook URL**: Make sure it's `https://your-domain.com/payments/stripe`
 2. **Backend not running**: Ensure your backend server is running
 3. **Wrong webhook secret**: Verify `STRIPE_WEBHOOK_SECRET` matches the one in Stripe
 4. **CORS issues**: Check backend CORS configuration
@@ -173,7 +173,7 @@ You can test if your webhook endpoint is reachable:
 
 ```bash
 # Test if endpoint exists (should return 400 or 405, not 404)
-curl -X POST https://your-domain.com/payments/stripe/webhook
+curl -X POST https://your-domain.com/payments/stripe
 ```
 
 ### Webhook Secret Mismatch

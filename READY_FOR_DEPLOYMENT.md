@@ -1,4 +1,4 @@
-# ✅ IMPLEMENTATION COMPLETE
+﻿# ✅ IMPLEMENTATION COMPLETE
 
 ## Production-Safe Rate Limiting Successfully Configured
 
@@ -18,7 +18,7 @@ Your Vendure backend on Railway now has enterprise-grade rate limiting and Graph
 ### ✅ Stripe Webhook Protection
 
 - Stripe webhooks **bypass rate limiting** completely
-- Routes excluded: `/payments/stripe/webhook`, `/stripe/webhook`, `/api/webhooks/stripe`
+- Routes excluded: `/payments/stripe`, `/stripe/webhook`, `/api/webhooks/stripe`
 - Payment processing guaranteed to work
 - Signature verification intact
 

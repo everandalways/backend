@@ -1,4 +1,4 @@
-# Complete Deliverables - Rate Limiting Implementation
+﻿# Complete Deliverables - Rate Limiting Implementation
 
 **Date:** January 18, 2026  
 **Status:** ✅ COMPLETE - Production Ready  
@@ -30,7 +30,7 @@
 - Main Vendure plugin: `RateLimitPlugin`
 - Custom `ThrottlerGuard` implementation
 - Stripe webhook route exclusion
-- Routes excluded: `/payments/stripe/webhook`, `/stripe/webhook`, `/api/webhooks/stripe`
+- Routes excluded: `/payments/stripe`, `/stripe/webhook`, `/api/webhooks/stripe`
 - NestJS module: `RateLimitModule`
 - Ready to import in `vendure-config.ts`
 

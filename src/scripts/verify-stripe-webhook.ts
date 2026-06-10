@@ -17,7 +17,10 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const WEBHOOK_PATH = '/payments/stripe/webhook';
+// Real Vendure StripePlugin webhook path: POST /payments/stripe
+// (Controller('payments') + Post('stripe') in
+// node_modules/@vendure/payments-plugin/package/stripe/stripe.controller.js).
+const WEBHOOK_PATH = '/payments/stripe';
 const REQUIRED_EVENTS = [
     'payment_intent.succeeded',
     'payment_intent.payment_failed',

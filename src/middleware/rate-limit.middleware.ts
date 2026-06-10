@@ -14,44 +14,31 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { ThrottlerStorageService } from '@nestjs/throttler';
 
 /**
- * Middleware to skip rate limiting for Stripe webhook routes
- * 
- * Routes excluded from throttling:
- * - /payments/stripe/webhook
- * - Any other Stripe-related webhook paths
+ * Middleware to skip rate limiting for the Stripe webhook route.
+ *
+ * Real Vendure StripePlugin webhook path: POST /payments/stripe
+ * (Controller('payments') + Post('stripe') in
+ * node_modules/@vendure/payments-plugin/package/stripe/stripe.controller.js).
  */
 @Injectable()
 export class StripeWebhookThrottleBypassMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: () => void) {
         // Mark Stripe webhook requests to skip throttling
         const isStripeWebhook = this.isStripeWebhookRequest(req);
-        
+
         if (isStripeWebhook) {
             // Bypass rate limiting for Stripe webhooks
             res.setHeader('X-Throttle-Bypass', 'true');
             (req as any).skipThrottle = true;
         }
-        
+
         next();
     }
 
     private isStripeWebhookRequest(req: Request): boolean {
         const path = req.path.toLowerCase();
         const method = req.method.toUpperCase();
-        
-        // Stripe webhooks use POST method
-        if (method !== 'POST') {
-            return false;
-        }
-
-        // Check for common Stripe webhook paths
-        const stripeWebhookPatterns = [
-            '/payments/stripe/webhook',
-            '/stripe/webhook',
-            '/api/webhooks/stripe',
-        ];
-
-        return stripeWebhookPatterns.some(pattern => path.includes(pattern));
+        return method === 'POST' && path === '/payments/stripe';
     }
 }
 

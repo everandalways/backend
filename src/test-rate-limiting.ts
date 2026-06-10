@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Rate Limiting Test Utilities
  * 
  * Use these utilities to test rate limiting in different scenarios:
@@ -92,7 +92,7 @@ async function testStripeWebhookBypass(apiUrl: string) {
     
     // Now try the Stripe webhook - should still succeed
     console.log('\nStep 2: Testing Stripe webhook...');
-    const webhookResponse = await fetch(`${apiUrl}/payments/stripe/webhook`, {
+    const webhookResponse = await fetch(`${apiUrl}/payments/stripe`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -23,9 +23,8 @@ import { getThrottlerConfig } from '../config/throttler.config';
  * - POST /shop-api/* (Shop API)
  * 
  * Excluded Routes (no rate limiting):
- * - POST /payments/stripe/webhook (Stripe webhook processing)
- * - POST /stripe/webhook
- * - POST /api/webhooks/stripe
+ * - POST /payments/stripe (Vendure StripePlugin webhook — verified against
+ *   node_modules/@vendure/payments-plugin/.../stripe.controller.js)
  */
 
 /**
@@ -97,13 +96,12 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
         const method = request.method?.toUpperCase();
 
         if (method === 'POST' && path) {
-            const stripeWebhookPatterns = [
-                '/payments/stripe/webhook',
-                '/stripe/webhook',
-                '/api/webhooks/stripe',
-            ];
-
-            if (stripeWebhookPatterns.some(pattern => path.includes(pattern))) {
+            // Real Vendure StripePlugin webhook path: POST /payments/stripe
+            // (Controller('payments') + Post('stripe') in
+            // node_modules/@vendure/payments-plugin/package/stripe/stripe.controller.js).
+            // Use === rather than includes() to avoid accidentally bypassing throttle
+            // for unrelated sub-paths.
+            if (path === '/payments/stripe') {
                 return true;
             }
         }

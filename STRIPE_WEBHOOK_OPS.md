@@ -1,4 +1,4 @@
-# Stripe Webhook — Operational Checklist
+﻿# Stripe Webhook — Operational Checklist
 
 One-page runbook for verifying and recovering the production Stripe webhook
 after each deploy. Pair this with `npm run verify:webhook` (see
@@ -11,7 +11,7 @@ after each deploy. Pair this with `npm run verify:webhook` (see
 The prod webhook endpoint registered in Stripe must be exactly:
 
 ```
-https://<RAILWAY_DOMAIN>/payments/stripe/webhook
+https://<RAILWAY_DOMAIN>/payments/stripe
 ```
 
 Replace `<RAILWAY_DOMAIN>` with the live Railway domain serving the backend

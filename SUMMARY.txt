@@ -1,4 +1,4 @@
-╔════════════════════════════════════════════════════════════════════════════════╗
+﻿╔════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║                 ✅ RATE LIMITING IMPLEMENTATION COMPLETE                        ║
 ║                                                                                  ║
@@ -111,7 +111,7 @@
 ✅ Stripe Webhook Protection
    ├─ Webhooks bypass rate limiting completely
    ├─ Routes excluded:
-   │  ├─ POST /payments/stripe/webhook
+   │  ├─ POST /payments/stripe
    │  ├─ POST /stripe/webhook
    │  └─ POST /api/webhooks/stripe
    ├─ Payment processing guaranteed

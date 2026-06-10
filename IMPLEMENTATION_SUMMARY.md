@@ -1,4 +1,4 @@
-# Rate Limiting Implementation Summary
+﻿# Rate Limiting Implementation Summary
 
 ## ✅ Implementation Complete
 
@@ -117,7 +117,7 @@ THROTTLE_LIMIT_PER_MINUTE?: string;
 - Stripe webhooks **bypass rate limiting** completely
 - Prevents missed webhook events due to rate limits
 - Routes excluded:
-  - `POST /payments/stripe/webhook`
+  - `POST /payments/stripe`
   - `POST /stripe/webhook`
   - `POST /api/webhooks/stripe`
 
@@ -186,7 +186,7 @@ curl https://your-railway-url/shop-api/
 for i in {1..150}; do curl https://your-railway-url/shop-api/ & done
 
 # Test Stripe webhook (should bypass)
-curl -X POST https://your-railway-url/payments/stripe/webhook \
+curl -X POST https://your-railway-url/payments/stripe \
   -H "Stripe-Signature: test" -d '{}'
 ```
 
@@ -365,7 +365,7 @@ See `RATE_LIMITING_GUIDE.md` for comprehensive testing guide.
 
 **Solution:** Verify webhook URL matches exclusion pattern
 
-- Should be: `/payments/stripe/webhook`
+- Should be: `/payments/stripe`
 - Check `src/plugins/rate-limit.plugin.ts` for patterns
 
 ### Problem: GraphQL still accessible
