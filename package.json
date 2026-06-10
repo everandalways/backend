@@ -12,6 +12,8 @@
     "start": "concurrently npm:start:*",
     "start:prod": "node ./dist/index.js & node ./dist/index-worker.js & wait",
     "import": "npx ts-node ./src/scripts/import-products.ts",
+    "import:validate": "npx ts-node ./src/scripts/bulk-import.ts --dry-run",
+    "import:run": "npx ts-node ./src/scripts/bulk-import.ts",
     "verify:webhook": "ts-node ./src/scripts/verify-stripe-webhook.ts"
   },
   "dependencies": {
