@@ -13,6 +13,7 @@ import 'dotenv/config';
 import path from 'path';
 import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import { RateLimitPlugin } from './plugins/rate-limit.plugin';
+import { FacetOptionSyncPlugin } from './plugins/facet-option-sync/facet-option-sync.plugin';
 
 function assertRequiredEnv(): void {
     if (process.env.APP_ENV === 'dev') {
@@ -248,6 +249,14 @@ export const config: VendureConfig = {
         StripePlugin.init({
             storeCustomersInStripe: true,
         }),
+        // Facets marked "Use for variant options" automatically create matching
+        // product option groups/options when a product's facet values are saved.
+        // autoCreateVariants additionally generates one DISABLED variant per option
+        // combination for new products (price copied from the default variant) —
+        // review prices in the variant list, then enable them. Set autoSync: false
+        // to turn all automation off (the syncProductOptionsFromFacets mutation and
+        // facet checkbox remain available).
+        FacetOptionSyncPlugin.init({ autoSync: true, autoCreateVariants: true }),
         AdminUiPlugin.init({
             route: 'admin',
             port: IS_DEV ? serverPort + 2 : serverPort, // In production, use same port as API
