@@ -1,139 +1,210 @@
-# Bulk Product Import Guide
+# Bulk Product Import — Complete Guide
 
-Create new products and variants in bulk from a CSV file. Built on Vendure's
-native importer (the same machinery that seeded the original catalog), wrapped
-with a validation layer that catches every common mistake **before** anything
-is written to the database.
+Add products to the store in bulk from a CSV (spreadsheet) file. Built on
+Vendure's own import machinery, wrapped with a validation layer that catches
+mistakes **before** anything touches the database.
 
-**This import is create-only.** Existing products are never modified. If any
-SKU or slug in your CSV already exists in the database, validation fails and
-nothing is imported. To change existing products, use the Admin UI.
+**Create-only:** existing products are never modified. If any SKU or slug in
+the CSV already exists, validation fails and nothing is imported. To edit
+existing products, use the Admin UI.
 
 ---
 
-## Quick start
+## One-time setup (already done, kept for reference)
 
 ```powershell
-# 1. ALWAYS validate first — read-only, touches nothing:
+npm i -g @railway/cli
+railway login          # opens browser
 cd backend
-npm run import:validate -- data/sample-bulk-upload.csv
-
-# 2. If validation passes, import for real:
-npm run import:run -- data/my-products.csv
+railway link           # pick: project → production → backend service
+railway service        # if "railway status" shows Service: None, run this and pick backend
 ```
 
-The script connects to whatever database your `backend/.env` points to.
-**Check your `.env` before running** — if it points at production, you are
-importing into production.
+---
 
-After a successful import: **log into Admin UI → Products → "Rebuild search
-index"**. New products will not appear in storefront search until you do.
+## The workflow (every import)
+
+```powershell
+cd C:\Users\qalam\OneDrive\Desktop\EVER-AND-ALWAYS\backend
+
+# 1. Check the file — read-only, changes nothing:
+railway run npm run import:validate -- data/YOUR-FILE.csv
+
+# 2. If validation passed, import for real:
+railway run npm run import:run -- data/YOUR-FILE.csv
+```
+
+3. **Admin UI → Products → "Rebuild search index"** — new products are
+   invisible in storefront search until you click this.
+4. Spot-check one product in Admin: price right? images loaded? variants OK?
+
+Notes:
+- `railway run` executes on your PC but injects the production env vars, so
+  the script connects to the live DB and stores images in R2.
+- First boot takes ~30-60 seconds (it starts a small headless Vendure).
+- Errors **block** the import. Warnings don't — read them and decide.
 
 ---
 
 ## CSV format
 
-Use `data/sample-bulk-upload.csv` as your starting template. The header row
-must contain ALL of these columns (in any order):
+Start from a sample file (see bottom). The header must contain ALL 14 columns:
 
-| Column | Required value | Notes |
+| Column | Example | Notes |
 |---|---|---|
-| `name` | Product name | Only on the FIRST row of each product |
-| `slug` | URL slug, e.g. `radiant-cut-diamond-ring` | Lowercase, hyphens, must be unique store-wide |
-| `description` | Product description | Wrap in `"..."` if it contains commas |
-| `assets` | Image URL(s) | `https://...` URLs are downloaded automatically and stored in R2. Separate multiple with `\|` |
-| `facets` | `category:Rings\|type:Engagement Ring\|shape:Round` | Pipe-separated `facet:value` pairs. New facets/values are auto-created |
-| `optionGroups` | `Metal\|Ring Size` | Pipe-separated group names. Empty for single-variant products |
-| `optionValues` | `White Gold\|6` | One value per group, per variant row |
-| `sku` | Unique SKU | Every variant row needs one |
-| `price` | **DOLLARS** e.g. `1899.00` | ⚠️ NOT cents. `1899.00` = $1,899.00. Writing `189900` would import as $189,900! |
-| `taxCategory` | `standard` | Must match an existing tax category name |
-| `stockOnHand` | e.g. `5` | Units in stock |
-| `trackInventory` | `true` / `false` | Empty = inherit global setting |
-| `variantAssets` | Variant-specific image URLs | Usually empty |
-| `variantFacets` | `metal:White Gold` | Facets on the variant (used for filtering) |
+| `name` | `Cushion Cut Halo Engagement Ring` | Only on the FIRST row of each product |
+| `slug` | `cushion-cut-halo-engagement-ring` | Lowercase + hyphens, unique store-wide |
+| `description` | `"A stunning cushion cut..."` | Wrap in `"..."` if it contains commas |
+| `assets` | `https://site.com/img.jpg` | Public image URL(s), `\|`-separated. See **Images** below |
+| `facets` | `category:Rings\|type:Engagement Ring\|shape:Cushion\|style:Halo` | `facet:value` pairs, `\|`-separated |
+| `optionGroups` | `Metal\|Ring Size` | Group names, `\|`-separated. Empty = single-variant product |
+| `optionValues` | `White Gold\|6` | One value per group, SAME ORDER as optionGroups |
+| `sku` | `ENG-HALO-WG-6` | Unique per variant, every variant row needs one |
+| `price` | `2499.00` | ⚠️ **DOLLARS, NOT CENTS.** `2499.00` = $2,499. Writing `249900` imports as $249,900! |
+| `taxCategory` | `standard` | Must match an existing tax category |
+| `stockOnHand` | `5` | Units in stock for this variant |
+| `trackInventory` | `true` | `true`/`false`, empty = inherit global setting |
+| `variantAssets` | (usually empty) | Variant-specific image URLs |
+| `variantFacets` | `metal:White Gold` | Facets on the variant — powers storefront filtering |
 
-### Multi-variant products
+Save from Excel as **"CSV UTF-8"**.
 
-The FIRST row carries the product info (name, slug, description, assets,
-facets, optionGroups) plus the first variant. Each ADDITIONAL variant is a row
-with the product columns left EMPTY and only the variant columns filled:
+### Existing facet vocabulary (reuse these — typos create junk facets)
 
-```csv
-name,slug,description,assets,facets,optionGroups,optionValues,sku,price,...
-Radiant Ring,radiant-ring,"Desc...",https://img.url,category:Rings,Metal|Ring Size,White Gold|6,SKU-WG-6,1899.00,...
-,,,,,,White Gold|7,SKU-WG-7,1899.00,...
-,,,,,,Rose Gold|6,SKU-RG-6,1899.00,...
-```
-
-### Single-variant products
-
-One row, leave `optionGroups` and `optionValues` empty:
-
-```csv
-Pendant,pendant-slug,"Desc...",https://img.url,category:Necklaces,,,SKU-PEND-1,749.00,...
-```
-
-### Existing facet vocabulary (use these for consistency)
-
-- `category:` Rings, Earrings, Necklaces
-- `type:` Engagement Ring, Wedding Band, Stud Earrings, Tennis Necklace, Pendant
+- `category:` Rings, Earrings, Necklaces, Bracelets
+- `type:` Engagement Ring, Wedding Band, Stud Earrings, Tennis Necklace, Tennis Bracelet, Pendant
 - `shape:` Round, Oval, Princess, Cushion, Pear, Emerald, Radiant
 - `style:` Solitaire, Halo, Pave
 - `diamond-type:` Lab Grown
 - `gender:` Men, Women
-- Variant: `metal:` White Gold, Yellow Gold, Rose Gold
-
-Typos create NEW facet values (e.g. `categry:Rings` makes a new facet called
-"categry") — they don't error. Double-check spelling.
+- variant: `metal:` White Gold, Yellow Gold, Rose Gold, Platinum
 
 ---
 
-## What validation checks
+## Variants & options — the part people get wrong
 
-`npm run import:validate` runs these checks and reports everything at once:
+**Core rules:**
 
-1. **CSV structure** — parsed by Vendure's own parser; any malformed row is reported with its line number
-2. **Duplicate slugs/SKUs within the file**
-3. **Collisions with the database** — any SKU or slug that already exists (hard error, create-only)
-4. **Price sanity** — zero/negative prices are errors; prices ≥ $25,000 get a "did you mean cents?" warning
-5. **Tax category** — warns if the name doesn't match any existing category (Vendure would silently fall back to the first one)
-6. **Image URLs** — HEAD-requests each unique URL and warns about unreachable ones
+1. The **first row** of a product carries the product info (name, slug,
+   description, assets, facets, optionGroups) **plus the first variant**.
+2. Every **additional variant is its own row** with the product columns
+   left EMPTY — only variant columns filled (optionValues, sku, price, ...).
+3. `optionValues` order matches `optionGroups` order:
+   groups `Metal|Ring Size` → values `White Gold|6`.
+4. **Vendure does NOT auto-generate combinations.** 3 metals × 2 sizes =
+   you write all 6 rows yourself.
+5. Each variant has its own SKU, price, and stock — so a Platinum variant
+   can cost more than the White Gold one.
 
-Errors block the import. Warnings don't — read them and decide.
+### Pattern 1 — one option group, same price (e.g. ring sizes)
+
+```csv
+Comfort Fit Wedding Band,comfort-fit-wedding-band,"Desc...",https://img.url,category:Rings|type:Wedding Band,Ring Size,8,WB-8,649.00,standard,6,true,,metal:Yellow Gold
+,,,,,,9,WB-9,649.00,standard,6,true,,metal:Yellow Gold
+,,,,,,10,WB-10,649.00,standard,4,true,,metal:Yellow Gold
+```
+
+### Pattern 2 — two option groups, price varies by variant
+
+```csv
+Halo Engagement Ring,halo-engagement-ring,"Desc...",https://img.url,category:Rings|type:Engagement Ring|style:Halo,Metal|Ring Size,White Gold|6,HALO-WG-6,2499.00,standard,3,true,,metal:White Gold
+,,,,,,White Gold|7,HALO-WG-7,2499.00,standard,3,true,,metal:White Gold
+,,,,,,Platinum|6,HALO-PT-6,2999.00,standard,2,true,,metal:Platinum
+,,,,,,Platinum|7,HALO-PT-7,2999.00,standard,1,true,,metal:Platinum
+```
+
+### Pattern 3 — option group as a price ladder (e.g. carat weight)
+
+```csv
+Tennis Bracelet,tennis-bracelet,"Desc...",https://img.url,category:Bracelets|type:Tennis Bracelet,Carat Total Weight,2.00 ct,TB-200,1999.00,standard,5,true,,metal:White Gold
+,,,,,,3.00 ct,TB-300,2999.00,standard,4,true,,metal:White Gold
+,,,,,,5.00 ct,TB-500,4999.00,standard,2,true,,metal:White Gold
+```
+
+### Single-variant product (no options at all)
+
+One row, `optionGroups` and `optionValues` empty:
+
+```csv
+Solitaire Pendant,solitaire-pendant,"Desc...",https://img.url,category:Necklaces|type:Pendant,,,PEND-1,749.00,standard,10,true,,
+```
 
 ---
+
+## Images — you do NOT upload to R2 manually
+
+Put any **public image URL** in the `assets` column. During import, Vendure
+**downloads the image and stores its own copy in R2** automatically. After
+import, the original URL no longer matters — the store serves from R2 forever.
+
+✅ **Works:** supplier/manufacturer image URLs (right-click → "Copy image
+address"), images on your existing website, any URL that shows the raw image
+when opened in an incognito browser.
+
+❌ **Doesn't work:** Google Drive / Dropbox / WhatsApp "share" links — those
+are webpages wrapped around the image, not the image itself. Validation will
+warn about them.
+
+**Photos only on your PC?**
+- Few products → leave `assets` empty, import, then drag-drop photos onto
+  each product in Admin UI (those uploads also land in R2 automatically).
+- Multiple images per product → separate URLs with `|` in the assets column;
+  the first one becomes the featured image.
+
+---
+
+## What validation checks (`import:validate`)
+
+1. CSV structure — parsed by Vendure's own parser, errors include row numbers
+2. Duplicate slugs/SKUs **within the file**
+3. Collisions **with the database** — existing SKU/slug = hard error
+4. Prices — zero/negative = error; ≥ $25,000 = "did you mean cents?" warning
+5. Tax category — warns on no match (Vendure would silently use the first one)
+6. Image URLs — checks each is reachable (HEAD, falls back to GET)
 
 ## Common mistakes
 
-| Mistake | What happens | Caught by validation? |
+| Mistake | Result | Caught? |
 |---|---|---|
-| Price in cents (`149900` for $1,499) | Imports as $149,900 | ⚠️ Warning if ≥ $25k |
-| Reusing an existing SKU | — | ✅ Hard error |
-| Excel saved with BOM/wrong encoding | First column unreadable | ✅ BOM stripped automatically; save as "CSV UTF-8" |
-| Comma in description without quotes | Row misaligned | ✅ Parse error with row number |
-| Typo in facet name | Creates junk facet | ❌ Not catchable — review facets in Admin UI after import |
-| Forgot to rebuild search index | Products invisible in storefront search | Reminder printed after import |
+| Price in cents (`249900`) | Imports as $249,900 | ⚠️ warning ≥ $25k |
+| Reused SKU/slug | — | ✅ blocked |
+| Wrong optionValues order vs optionGroups | Swapped option labels | ❌ review in Admin |
+| Facet typo (`categry:Rings`) | Junk facet auto-created | ❌ check Admin → Facets |
+| Forgot "Rebuild search index" | Products invisible in search | reminder printed |
+| Google Drive share link as image | Import error on that asset | ⚠️ warned |
+
+## Undo / recovery
+
+No built-in undo. Options:
+- **Few wrong products:** Admin UI → Products → select → Delete (variants go with the product).
+- **Many wrong:** delete the imported products, fix the CSV, re-import
+  (must delete first — SKU collisions block re-import).
+- **Junk facets from typos:** Admin UI → Catalog → Facets → delete bogus values.
+
+Tip: prefix test SKUs (`SAMPLE-...`) so test imports are easy to find and delete.
 
 ---
 
-## Recovery: "I imported something wrong"
+## Sample files
 
-There is no built-in undo. Options:
+| File | Shows |
+|---|---|
+| `data/sample-bulk-upload.csv` | Basic: multi-variant ring, single-variant pendant, carat-tier earrings |
+| `data/sample-variants-options.csv` | All three variant patterns above, per-variant pricing |
 
-1. **A few products:** delete them in Admin UI (Products → select → Delete). Deleting the product removes its variants.
-2. **Wrong prices/details on many:** fix by hand in Admin UI, or delete all imported products and re-import the corrected CSV (delete first — otherwise SKU collisions block the re-import).
-3. **Junk facets created by typos:** Admin UI → Catalog → Facets → delete the bogus facet values.
-
-Tip: prefix experimental SKUs (like the sample's `SAMPLE-`) so test imports are
-easy to find and delete.
+Both use `SAMPLE-`/`SAMPLE2-` SKU prefixes — safe to import as a test and delete afterwards.
 
 ---
 
 ## Technical notes
 
-- Script: `src/scripts/bulk-import.ts`
-- Uses `ImportParser` + `importProductsFromCsv` from `@vendure/core` — the same code path as Vendure's own `populate()`
-- Images: `DefaultAssetImportStrategy` downloads each URL (3 retries, 5s timeout) and stores via the configured R2 storage strategy
-- The old `npm run import` script (`import-products.ts`) is superseded by this one and passes its CSV as the wrong argument to `populate()` — don't use it
-- Bootstraps Vendure with JobQueue/Scheduler/AdminUI/Email plugins removed; AssetServerPlugin stays (it configures R2 storage)
+- Script: `src/scripts/bulk-import.ts` (compiled to `dist/scripts/bulk-import.js`)
+- npm scripts: `import:validate` (dry-run) / `import:run` — both take the CSV path after `--`
+- Uses `ImportParser` + `importProductsFromCsv` from `@vendure/core` — the same
+  code path as Vendure's `populate()`; images via `DefaultAssetImportStrategy`
+  (downloads URLs, 3 retries, stores via the configured R2 strategy)
+- Bootstraps headless (port 0) with JobQueue/Scheduler/AdminUI/Email plugins
+  filtered out; AssetServerPlugin stays (it configures R2 storage)
+- The old `npm run import` script (`import-products.ts`) is superseded and
+  buggy (passes the CSV as the wrong `populate()` argument) — don't use it
+- New facets/option groups in the CSV are auto-created on import
