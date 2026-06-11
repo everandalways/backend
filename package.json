@@ -12,7 +12,8 @@
     "start": "concurrently npm:start:*",
     "start:prod": "node ./dist/index.js & node ./dist/index-worker.js & wait",
     "import": "npx ts-node ./src/scripts/import-products.ts",
-    "verify:webhook": "ts-node ./src/scripts/verify-stripe-webhook.ts"
+    "verify:webhook": "ts-node ./src/scripts/verify-stripe-webhook.ts",
+    "sync:options": "ts-node ./src/scripts/sync-options-from-facets.ts"
   },
   "dependencies": {
     "concurrently": "9.2.1",
@@ -27,6 +28,7 @@
     "@vendure/graphiql-plugin": "3.4.2",
     "@vendure/payments-plugin": "^3.4.2",
     "dotenv": "17.2.2",
+    "graphql-tag": "^2.12.6",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "8.16.3",
