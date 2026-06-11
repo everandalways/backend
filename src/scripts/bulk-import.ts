@@ -67,8 +67,12 @@ function parseArgs(): { csvPath: string; dryRun: boolean } {
     return { csvPath, dryRun };
 }
 
-/** HEAD-request a URL; resolves ok=true if status < 400. Never throws. */
-function checkUrlReachable(urlString: string): Promise<{ ok: boolean; detail: string }> {
+/**
+ * Check a URL is reachable; resolves ok=true if status < 400. Never throws.
+ * Tries HEAD first (cheap); some hosts reject HEAD with 405/501, so it falls
+ * back to GET and aborts as soon as response headers arrive (no full download).
+ */
+function checkUrlReachable(urlString: string, method: 'HEAD' | 'GET' = 'HEAD'): Promise<{ ok: boolean; detail: string }> {
     return new Promise(resolve => {
         let settled = false;
         const done = (ok: boolean, detail: string) => {
@@ -80,10 +84,17 @@ function checkUrlReachable(urlString: string): Promise<{ ok: boolean; detail: st
         try {
             const url = new URL(urlString);
             const request = url.protocol === 'https:' ? https.request : http.request;
-            const req = request(url, { method: 'HEAD', timeout: 8000 }, res => {
+            const req = request(url, { method, timeout: 8000 }, res => {
                 const status = res.statusCode ?? 0;
-                res.resume();
+                if (method === 'HEAD' && (status === 405 || status === 501)) {
+                    // Host doesn't allow HEAD — retry once with GET
+                    res.resume();
+                    settled = true;
+                    resolve(checkUrlReachable(urlString, 'GET'));
+                    return;
+                }
                 done(status < 400, `status ${status}`);
+                res.destroy(); // headers are enough — don't download the body
             });
             req.on('timeout', () => {
                 req.destroy();

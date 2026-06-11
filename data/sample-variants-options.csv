@@ -1,0 +1,14 @@
+name,slug,description,assets,facets,optionGroups,optionValues,sku,price,taxCategory,stockOnHand,trackInventory,variantAssets,variantFacets
+Comfort Fit Classic Wedding Band,comfort-fit-classic-wedding-band,"A timeless comfort fit wedding band in polished yellow gold. The rounded interior makes it exceptionally comfortable for everyday wear. A classic choice that never goes out of style.",https://picsum.photos/seed/wedding-band/800/800,category:Rings|type:Wedding Band|gender:Men,Ring Size,8,SAMPLE2-WB-CF-8,649.00,standard,6,true,,metal:Yellow Gold
+,,,,,,9,SAMPLE2-WB-CF-9,649.00,standard,6,true,,metal:Yellow Gold
+,,,,,,10,SAMPLE2-WB-CF-10,649.00,standard,4,true,,metal:Yellow Gold
+,,,,,,11,SAMPLE2-WB-CF-11,649.00,standard,3,true,,metal:Yellow Gold
+Cushion Cut Halo Engagement Ring,cushion-cut-halo-engagement-ring,"A stunning cushion cut diamond surrounded by a sparkling halo of pavé diamonds. The halo setting makes the center stone appear larger while adding extra brilliance. Available in three precious metals.",https://picsum.photos/seed/halo-ring/800/800,category:Rings|type:Engagement Ring|shape:Cushion|style:Halo,Metal|Ring Size,White Gold|6,SAMPLE2-ENG-HALO-WG-6,2499.00,standard,3,true,,metal:White Gold
+,,,,,,White Gold|7,SAMPLE2-ENG-HALO-WG-7,2499.00,standard,3,true,,metal:White Gold
+,,,,,,Rose Gold|6,SAMPLE2-ENG-HALO-RG-6,2499.00,standard,2,true,,metal:Rose Gold
+,,,,,,Rose Gold|7,SAMPLE2-ENG-HALO-RG-7,2499.00,standard,2,true,,metal:Rose Gold
+,,,,,,Platinum|6,SAMPLE2-ENG-HALO-PT-6,2999.00,standard,2,true,,metal:Platinum
+,,,,,,Platinum|7,SAMPLE2-ENG-HALO-PT-7,2999.00,standard,1,true,,metal:Platinum
+Lab Grown Diamond Tennis Bracelet,lab-grown-diamond-tennis-bracelet,"An elegant tennis bracelet lined with brilliant lab grown diamonds in a classic four-prong setting. Choose your total carat weight. Secure box clasp with double safety latch.",https://picsum.photos/seed/tennis-bracelet/800/800,category:Bracelets|type:Tennis Bracelet|diamond-type:Lab Grown,Carat Total Weight,2.00 ct,SAMPLE2-TB-LG-200,1999.00,standard,5,true,,metal:White Gold
+,,,,,,3.00 ct,SAMPLE2-TB-LG-300,2999.00,standard,4,true,,metal:White Gold
+,,,,,,5.00 ct,SAMPLE2-TB-LG-500,4999.00,standard,2,true,,metal:White Gold
