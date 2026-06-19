@@ -247,6 +247,9 @@ export const config: VendureConfig = {
         // The plugin itself only needs minimal configuration here
         StripePlugin.init({
             storeCustomersInStripe: true,
+            // Gracefully skip webhook events that don't have Vendure metadata
+            // (e.g. payment intents from other integrations on the same Stripe account)
+            skipPaymentIntentsWithoutExpectedMetadata: true,
         }),
         AdminUiPlugin.init({
             route: 'admin',
