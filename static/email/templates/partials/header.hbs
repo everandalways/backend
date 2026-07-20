@@ -1,18 +1,72 @@
 <mjml>
     <mj-head>
         <mj-title>{{ title }}</mj-title>
+        <mj-font name="Playfair Display" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" />
+        <mj-font name="Inter" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" />
         <mj-style inline="inline">
+            body {
+                background-color: #fbfaf8 !important;
+            }
+            .brand-title {
+                font-family: 'Playfair Display', Georgia, serif !important;
+                font-size: 28px !important;
+                font-weight: 700 !important;
+                color: #1c1e2e !important;
+                letter-spacing: -0.02em !important;
+            }
+            .brand-subtitle {
+                font-family: 'Inter', Arial, sans-serif !important;
+                font-size: 9px !important;
+                letter-spacing: 0.35em !important;
+                color: #cca756 !important;
+                text-transform: uppercase !important;
+                margin-top: 4px !important;
+            }
+            h1, h2, h3, h4 {
+                font-family: 'Playfair Display', Georgia, serif !important;
+                color: #1c1e2e !important;
+                font-weight: normal !important;
+            }
             h3 {
-                font-size: 18px;
-                color: #555;
-                font-weight: normal;
+                font-size: 20px !important;
+                margin-top: 0 !important;
+                margin-bottom: 12px !important;
+                border-bottom: 1px solid #e7ddcd !important;
+                padding-bottom: 8px !important;
+            }
+            p, span, td {
+                font-family: 'Inter', Arial, sans-serif !important;
+                font-size: 14px !important;
+                line-height: 1.6 !important;
+                color: #4a4a4a !important;
+            }
+            .bg-off-white {
+                background-color: #ffffff !important;
             }
         </mj-style>
     </mj-head>
 
-    <mj-body>
-        <mj-section background-color="#f0f0f0">
+    <mj-body background-color="#fbfaf8">
+        <!-- Top Gold Border -->
+        <mj-section padding="0">
             <mj-column>
-                <mj-text>[company header]</mj-text>
+                <mj-divider border-width="3px" border-color="#cca756" padding="0" />
+            </mj-column>
+        </mj-section>
+
+        <!-- Brand Header -->
+        <mj-section background-color="#ffffff" padding="25px 0">
+            <mj-column>
+                <mj-text align="center" padding="0">
+                    <span class="brand-title">Ever &amp; Always</span>
+                    <div class="brand-subtitle">Fine Diamond Jewelry</div>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        <!-- Subtle separation line -->
+        <mj-section padding="0" background-color="#ffffff">
+            <mj-column>
+                <mj-divider border-width="1px" border-color="#f5f1ea" padding="0" />
             </mj-column>
         </mj-section>
