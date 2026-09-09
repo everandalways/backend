@@ -219,7 +219,14 @@ export const config: VendureConfig = {
                 : undefined,
         }),
         DefaultSchedulerPlugin.init(),
-        DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
+        DefaultJobQueuePlugin.init({
+            useDatabaseForBuffer: true,
+            // Vendure's default is 200ms per queue. With 4 active queues that is
+            // 20 polling transactions/sec against Postgres around the clock, which
+            // dominated our Railway egress bill. 5s trades job pickup latency for
+            // a ~25x reduction in idle query volume.
+            pollInterval: 5000,
+        }),
         DefaultSearchPlugin.init({ bufferUpdates: false, indexStockStatus: true }),
         EmailPlugin.init({
 
