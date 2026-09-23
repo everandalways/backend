@@ -13,6 +13,9 @@ import 'dotenv/config';
 import path from 'path';
 import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import { RateLimitPlugin } from './plugins/rate-limit.plugin';
+import { ReserveAtCheckoutStrategy } from './strategies/reserve-at-checkout.strategy';
+import { StockGuardOrderProcess } from './config/stock-guard.process';
+import { expireStaleCheckoutsTask } from './config/expire-stale-checkouts.task';
 
 function assertRequiredEnv(): void {
     if (process.env.APP_ENV === 'dev') {
@@ -188,6 +191,17 @@ export const config: VendureConfig = {
     },
     paymentOptions: {
         paymentMethodHandlers: IS_DEV ? [dummyPaymentHandler] : [],
+    },
+    // Stock is reserved when checkout starts rather than when payment settles,
+    // and concurrent checkouts are serialised on the stock row, so two
+    // customers cannot both buy the same stock-of-1 diamond. Abandoned
+    // checkouts are swept up by the expire-stale-checkouts task below.
+    orderOptions: {
+        stockAllocationStrategy: new ReserveAtCheckoutStrategy(),
+        process: [new StockGuardOrderProcess()],
+    },
+    schedulerOptions: {
+        tasks: [expireStaleCheckoutsTask],
     },
     // When adding or altering custom field definitions, the database will
     // need to be updated. See the "Migrations" section in README.md.
