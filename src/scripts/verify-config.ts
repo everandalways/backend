@@ -1,22 +1,18 @@
 /* eslint-disable no-console */
 /**
- * Pre-deploy sanity check for configuration that only fails at boot.
+ * Pre-deploy sanity check for configuration that only fails at boot, or under
+ * concurrency — the kind TypeScript compiles quite happily.
  *
- * Run before every deploy:
  *   npm run verify:config
  *
- * Exists because a config change shipped on 2026-09-23 took the whole site
- * down: `orderOptions.process` REPLACES Vendure's default process array rather
- * than extending it, so omitting `defaultOrderProcess` removed every order
- * state and the server died with
- *   'The order process has an invalid configuration: The initial state
- *    "Created" is not defined'
- * TypeScript compiled it happily — the failure only surfaces when the state
- * machine is constructed at runtime.
+ * Both checks below exist because the corresponding mistake actually took the
+ * production site down on 2026-09-23.
  *
  * Needs no database and makes no network calls.
  */
 
+import * as fs from 'fs';
+import * as path from 'path';
 import { config } from '../vendure-config';
 
 // These live outside the public entrypoint, but are what OrderStateMachine
@@ -29,20 +25,24 @@ const { validateTransitionDefinition } = require('@vendure/core/dist/common/fini
 const problems: string[] = [];
 const notes: string[] = [];
 
+/**
+ * `orderOptions.process` REPLACES Vendure's default rather than extending it
+ * (default-config.ts sets `process: [defaultOrderProcess]`, and
+ * OrderStateMachine.initConfig reads the array verbatim). Omitting
+ * defaultOrderProcess removes every order state and the server dies at boot
+ * with 'The initial state "Created" is not defined'.
+ */
 function checkStateMachine(
     label: string,
     processes: Array<{ transitions?: any }> | undefined,
     initialState: string,
 ): void {
     if (processes === undefined) {
-        // Not overridden, so Vendure supplies its own default. Nothing to check.
         console.log(`  --  ${label} — using Vendure default`);
         return;
     }
     if (processes.length === 0) {
-        problems.push(
-            `${label}: set to an empty array, which REPLACES Vendure's default and removes every state`,
-        );
+        problems.push(`${label}: set to an empty array, which removes every state`);
         return;
     }
     const all = processes.reduce(
@@ -62,14 +62,59 @@ function checkStateMachine(
     console.log(`  ok  ${label} — ${stateCount} states, initial "${initialState}"`);
 }
 
+/**
+ * `rawConnection` runs OUTSIDE the surrounding transaction and takes a SECOND
+ * connection from the pool. Inside an order process that means every in-flight
+ * checkout holds one connection while waiting for another; with the pool
+ * default of 10, ten concurrent checkouts hang the server permanently.
+ */
+function checkNoRawConnection(): void {
+    const dirs = [path.join(__dirname, '..', 'config'), path.join(__dirname, '..', 'strategies')];
+    let found = false;
+
+    for (const dir of dirs) {
+        if (!fs.existsSync(dir)) {
+            continue;
+        }
+        // Only *.process.ts / *.strategy.ts: those run inside the transaction
+        // opened by the resolver. A *.task.ts scheduled job runs standalone, so
+        // rawConnection is both correct and necessary there.
+        const inTransaction = fs
+            .readdirSync(dir)
+            .filter(f => f.endsWith('.process.ts') || f.endsWith('.strategy.ts'));
+        for (const file of inTransaction) {
+            const src = fs.readFileSync(path.join(dir, file), 'utf8');
+            src.split(/\r?\n/).forEach((raw, i) => {
+                const line = raw.trim();
+                const isComment =
+                    line.startsWith('*') || line.startsWith('//') || line.startsWith('/*');
+                if (line.includes('rawConnection') && !isComment) {
+                    found = true;
+                    problems.push(
+                        `${file}:${i + 1} uses rawConnection inside a process/strategy. It escapes ` +
+                            `the transaction and takes a second pool connection, which deadlocks ` +
+                            `under concurrency. Use connection.getRepository(ctx, Entity).manager ` +
+                            `instead.\n      ${line}`,
+                    );
+                }
+            });
+        }
+    }
+
+    if (!found) {
+        console.log('  ok  no rawConnection use inside order processes / strategies');
+    }
+}
+
 console.log('\n[verify:config] Checking configuration that only fails at boot...\n');
 
 checkStateMachine('order process', config.orderOptions?.process, 'Created');
 checkStateMachine('payment process', config.paymentOptions?.process, 'Created');
 checkStateMachine('fulfillment process', config.shippingOptions?.customFulfillmentProcess, 'Pending');
+checkNoRawConnection();
 
-// A custom stockAllocationStrategy is the other half of the oversell fix; if it
-// is dropped, overselling silently returns with no error anywhere.
+// Half of the oversell fix. If this is dropped, overselling silently returns
+// with nothing anywhere to indicate it.
 const allocation = config.orderOptions?.stockAllocationStrategy;
 if (!allocation) {
     notes.push(
@@ -92,12 +137,16 @@ if (allocation && !scheduled.some((t: any) => t.id === 'expire-stale-checkouts')
 
 if (notes.length) {
     console.log('\nNotes:');
-    for (const n of notes) console.log(`  - ${n}`);
+    for (const n of notes) {
+        console.log(`  - ${n}`);
+    }
 }
 
 if (problems.length) {
     console.error('\n[verify:config] FAIL\n');
-    for (const p of problems) console.error(`  - ${p}`);
+    for (const p of problems) {
+        console.error(`  - ${p}`);
+    }
     console.error('');
     process.exit(1);
 }
