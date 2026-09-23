@@ -12,7 +12,8 @@
     "start": "concurrently npm:start:*",
     "start:prod": "node ./dist/index.js & node ./dist/index-worker.js & wait",
     "import": "npx ts-node ./src/scripts/import-products.ts",
-    "verify:webhook": "ts-node ./src/scripts/verify-stripe-webhook.ts"
+    "verify:webhook": "ts-node ./src/scripts/verify-stripe-webhook.ts",
+    "verify:config": "ts-node ./src/scripts/verify-config.ts"
   },
   "dependencies": {
     "concurrently": "9.2.1",

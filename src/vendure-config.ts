@@ -1,4 +1,5 @@
 import {
+    defaultOrderProcess,
     dummyPaymentHandler,
     DefaultJobQueuePlugin,
     DefaultSchedulerPlugin,
@@ -198,7 +199,10 @@ export const config: VendureConfig = {
     // checkouts are swept up by the expire-stale-checkouts task below.
     orderOptions: {
         stockAllocationStrategy: new ReserveAtCheckoutStrategy(),
-        process: [new StockGuardOrderProcess()],
+        // `process` REPLACES the default rather than extending it, so
+        // defaultOrderProcess must be listed first — it is what defines the
+        // order states themselves, including the initial "Created" state.
+        process: [defaultOrderProcess, new StockGuardOrderProcess()],
     },
     schedulerOptions: {
         tasks: [expireStaleCheckoutsTask],

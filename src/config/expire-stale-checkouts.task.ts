@@ -1,5 +1,5 @@
 import { Logger, Order, OrderService, RequestContext, ScheduledTask, TransactionalConnection } from '@vendure/core';
-import { IsNull, LessThan, Not } from 'typeorm';
+import { LessThan } from 'typeorm';
 
 const loggerCtx = 'ExpireStaleCheckouts';
 
