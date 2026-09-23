@@ -253,6 +253,20 @@ export const config: VendureConfig = {
                 host: 'smtp.hostinger.com',
                 port: 465,
                 secure: true,  // true for port 465
+                // Nodemailer's defaults are connectionTimeout 120s and
+                // socketTimeout 600s. Connections to Hostinger from Railway
+                // stall occasionally, and at those defaults a single stall tied
+                // up a worker slot for 2 minutes — times 6 retries, that is 12
+                // minutes per email. Jobs then queued behind it, waiting first
+                // minutes and eventually hours, until the queue stopped moving
+                // altogether. No email was delivered between 2026-07-20 and
+                // 2026-09-23 as a result.
+                //
+                // A healthy send completes in ~2 seconds, so 10s is generous.
+                // Failing fast keeps a stall from cascading into an outage.
+                connectionTimeout: 10000,
+                greetingTimeout: 10000,
+                socketTimeout: 20000,
                 auth: {
                     user: process.env.SMTP_USER,
                     pass: process.env.SMTP_PASS,

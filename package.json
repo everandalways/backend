@@ -13,7 +13,8 @@
     "start:prod": "node ./dist/index.js & node ./dist/index-worker.js & wait",
     "import": "npx ts-node ./src/scripts/import-products.ts",
     "verify:webhook": "ts-node ./src/scripts/verify-stripe-webhook.ts",
-    "verify:config": "ts-node ./src/scripts/verify-config.ts"
+    "verify:config": "ts-node ./src/scripts/verify-config.ts",
+    "check:jobs": "ts-node ./src/scripts/check-job-health.ts"
   },
   "dependencies": {
     "concurrently": "9.2.1",
