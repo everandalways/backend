@@ -10,7 +10,7 @@
     "start:server": "node ./dist/index.js",
     "start:worker": "node ./dist/index-worker.js",
     "start": "concurrently npm:start:*",
-    "start:prod": "node ./dist/index.js & node ./dist/index-worker.js & wait",
+    "start:prod": "concurrently --kill-others --names server,worker --prefix-colors blue,magenta \"npm:start:server\" \"npm:start:worker\"",
     "import": "npx ts-node ./src/scripts/import-products.ts",
     "verify:webhook": "ts-node ./src/scripts/verify-stripe-webhook.ts",
     "verify:config": "ts-node ./src/scripts/verify-config.ts",

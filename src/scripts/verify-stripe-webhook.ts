@@ -37,16 +37,53 @@ function pass(message: string): never {
     process.exit(0);
 }
 
-async function main(): Promise<void> {
-    const secretKey = process.env.STRIPE_SECRET_KEY;
-    const backendUrl = process.env.BACKEND_URL;
-
-    if (!secretKey) {
-        fail('STRIPE_SECRET_KEY is not set in the environment.');
+/** Reads the apiKey off the enabled Stripe payment method via the Admin API. */
+async function getBackendStripeKey(backendUrl: string): Promise<string> {
+    const username = process.env.SUPERADMIN_USERNAME;
+    const password = process.env.SUPERADMIN_PASSWORD;
+    if (!username || !password) {
+        fail('SUPERADMIN_USERNAME and SUPERADMIN_PASSWORD must be set so the real Stripe key can be read from the payment method.');
     }
+    const endpoint = backendUrl.replace(/\/+$/, '') + '/admin-api';
+
+    const post = async (body: unknown, token?: string) => {
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (token) headers.Authorization = `Bearer ${token}`;
+        const res = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(body) });
+        return { json: (await res.json()) as any, token: res.headers.get('vendure-auth-token') };
+    };
+
+    const login = await post({
+        query: `mutation($u:String!,$p:String!){login(username:$u,password:$p){__typename ...on CurrentUser{id}}}`,
+        variables: { u: username, p: password },
+    });
+    if (login.json?.data?.login?.__typename !== 'CurrentUser') {
+        fail('Admin login failed — cannot read the Stripe key from the payment method.');
+    }
+
+    const methods = await post(
+        { query: `{paymentMethods(options:{take:50}){items{code enabled handler{code args{name value}}}}}` },
+        login.token ?? undefined,
+    );
+    const items = methods.json?.data?.paymentMethods?.items ?? [];
+    const stripeMethod = items.find((m: any) => m.handler?.code === 'stripe' && m.enabled);
+    if (!stripeMethod) {
+        fail('No ENABLED Stripe payment method found in the backend.');
+    }
+    const key = stripeMethod.handler.args.find((a: any) => a.name === 'apiKey')?.value;
+    if (!key) {
+        fail(`Payment method "${stripeMethod.code}" has no apiKey configured.`);
+    }
+    console.log(`[verify:webhook] Using the key from payment method "${stripeMethod.code}" (${key.slice(0, 7)}...).`);
+    return key;
+}
+
+async function main(): Promise<void> {
+    const backendUrl = process.env.BACKEND_URL;
     if (!backendUrl) {
         fail('BACKEND_URL is not set in the environment (e.g. https://<railway-domain>).');
     }
+    const secretKey = await getBackendStripeKey(backendUrl);
 
     const expectedUrl = backendUrl.replace(/\/+$/, '') + WEBHOOK_PATH;
 

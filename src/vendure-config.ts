@@ -16,7 +16,9 @@ import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import { RateLimitPlugin } from './plugins/rate-limit.plugin';
 import { ReserveAtCheckoutStrategy } from './strategies/reserve-at-checkout.strategy';
 import { StockGuardOrderProcess } from './config/stock-guard.process';
+import { RefreshPricesOrderProcess } from './config/refresh-prices.process';
 import { expireStaleCheckoutsTask } from './config/expire-stale-checkouts.task';
+import { jobHealthAlertTask } from './config/job-health-alert.task';
 
 function assertRequiredEnv(): void {
     if (process.env.APP_ENV === 'dev') {
@@ -151,6 +153,10 @@ export const config: VendureConfig = {
         adminApiPath: 'admin-api',
         shopApiPath: 'shop-api',
         trustProxy: IS_DEV ? false : 1,
+        // Off in production so the full schema is not browsable by anyone.
+        // PRODUCTION_SECURITY_CONFIG in middleware/rate-limit.middleware.ts
+        // expressed this intent but was never imported, so it had no effect.
+        introspection: IS_DEV,
         cors: {
             origin: IS_DEV
                 ? ['http://localhost:3000', 'http://localhost:8002']
@@ -202,10 +208,12 @@ export const config: VendureConfig = {
         // `process` REPLACES the default rather than extending it, so
         // defaultOrderProcess must be listed first — it is what defines the
         // order states themselves, including the initial "Created" state.
-        process: [defaultOrderProcess, new StockGuardOrderProcess()],
+        // Order matters: re-price first so the stock guard and the eventual
+        // PaymentIntent both work from current prices.
+        process: [defaultOrderProcess, new RefreshPricesOrderProcess(), new StockGuardOrderProcess()],
     },
     schedulerOptions: {
-        tasks: [expireStaleCheckoutsTask],
+        tasks: [expireStaleCheckoutsTask, jobHealthAlertTask],
     },
     // When adding or altering custom field definitions, the database will
     // need to be updated. See the "Migrations" section in README.md.

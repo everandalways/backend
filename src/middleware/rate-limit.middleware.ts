@@ -41,34 +41,3 @@ export class StripeWebhookThrottleBypassMiddleware implements NestMiddleware {
         return method === 'POST' && path === '/payments/stripe';
     }
 }
-
-/**
- * Configuration constants for production security
- */
-export const PRODUCTION_SECURITY_CONFIG = {
-    // Disable GraphQL Playground in production
-    graphQLPlayground: false,
-    
-    // Disable GraphQL introspection queries in production
-    // This prevents attackers from discovering the schema
-    graphQLIntrospection: false,
-    
-    // Enable detailed error messages only in development
-    graphQLDebug: false,
-    
-    // Rate limiting settings (per minute per IP)
-    rateLimiting: {
-        development: 1000,
-        production: 100,
-    },
-};
-
-/**
- * Helper function to get security configuration based on environment
- */
-export const getProductionSecurityConfig = (isDev: boolean) => ({
-    ...PRODUCTION_SECURITY_CONFIG,
-    graphQLPlayground: isDev,
-    graphQLIntrospection: isDev,
-    graphQLDebug: isDev,
-});
