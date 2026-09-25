@@ -14,6 +14,7 @@ import 'dotenv/config';
 import path from 'path';
 import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import { RateLimitPlugin } from './plugins/rate-limit.plugin';
+import { CouponLockPlugin } from './plugins/coupon-lock.plugin';
 import { ReserveAtCheckoutStrategy } from './strategies/reserve-at-checkout.strategy';
 import { StockGuardOrderProcess } from './config/stock-guard.process';
 import { RefreshPricesOrderProcess } from './config/refresh-prices.process';
@@ -321,5 +322,6 @@ export const config: VendureConfig = {
             // }
         }),
         RateLimitPlugin,
+        CouponLockPlugin,
     ],
 };
