@@ -17,6 +17,11 @@ export const STUCK_AFTER_MINUTES = Number(process.env.JOB_STUCK_AFTER_MINUTES ??
 export const WINDOW_HOURS = Number(process.env.JOB_WINDOW_HOURS ?? 24);
 /** Alert if no email has succeeded in this long. */
 export const EMAIL_SILENCE_DAYS = Number(process.env.EMAIL_SILENCE_DAYS ?? 7);
+/**
+ * Alert when an unfinished order has held stock on a live product this long.
+ * Stripe card authorisations lapse after 7 days, so a day is ample warning.
+ */
+export const RESERVATION_ALERT_HOURS = Number(process.env.RESERVATION_ALERT_HOURS ?? 24);
 
 export interface QueueStats {
     queueName: string;
@@ -26,8 +31,16 @@ export interface QueueStats {
     failureRate: number;
 }
 
+export interface HeldReservation {
+    code: string;
+    state: string;
+    since: string;
+    units: string;
+}
+
 export interface HealthReport {
     queues: QueueStats[];
+    reservations: HeldReservation[];
     lastSuccessfulEmail: string | null;
     problems: string[];
     warnings: string[];
@@ -107,7 +120,54 @@ export async function checkJobHealth(query: QueryFn): Promise<HealthReport> {
         }
     }
 
-    return { queues, lastSuccessfulEmail, problems, warnings, healthy: problems.length === 0 };
+    // 4. Stock held by orders that will not complete on their own. With stock-of-1
+    //    diamonds, each of these is a stone nobody can buy, and nothing on the
+    //    storefront says why. Deliberately report-only: PaymentAuthorized means
+    //    money is authorised, so a human decides whether to capture or cancel.
+    //
+    //    Net holding comes from the stock-movement ledger (allocations + sales −
+    //    releases). PaymentSettled and later are excluded: a paid order rightly
+    //    holds its stock until it ships. Deleted variants are excluded: nobody
+    //    can buy those anyway.
+    const reservations = await query<HeldReservation>(
+        `SELECT o.code, o.state, o."updatedAt"::text AS since, sum(h.units)::text AS units
+           FROM (SELECT ol."orderId", sm."productVariantId",
+                        sum(CASE sm.type WHEN 'RELEASE' THEN -sm.quantity ELSE sm.quantity END) AS units
+                   FROM stock_movement sm
+                   JOIN order_line ol ON ol.id = sm."orderLineId"
+                  WHERE sm.type IN ('ALLOCATION', 'SALE', 'RELEASE')
+                  GROUP BY 1, 2) h
+           JOIN "order" o ON o.id = h."orderId"
+           JOIN product_variant pv ON pv.id = h."productVariantId" AND pv."deletedAt" IS NULL
+          WHERE h.units > 0
+            AND (o.state IN ('Cancelled', 'AddingItems')
+                 OR (o.state IN ('ArrangingPayment', 'PaymentAuthorized', 'ArrangingAdditionalPayment')
+                     AND o."updatedAt" < now() - ($1 || ' hours')::interval))
+          GROUP BY o.code, o.state, o."updatedAt"
+          ORDER BY o."updatedAt"`,
+        [RESERVATION_ALERT_HOURS],
+    );
+    if (reservations.length) {
+        const units = reservations.reduce((n, r) => n + Number(r.units), 0);
+        problems.push(
+            `${reservations.length} order(s) are holding ${units} unit(s) of live stock and will not ` +
+                `release it on their own: ${reservations
+                    .slice(0, 10)
+                    .map(r => `${r.code} (${r.state}, ${r.units})`)
+                    .join(', ')}${reservations.length > 10 ? ', …' : ''}. ` +
+                `Cancelled/AddingItems means a release was missed; otherwise review the order in the ` +
+                `Admin UI and capture or cancel it.`,
+        );
+    }
+
+    return {
+        queues,
+        reservations,
+        lastSuccessfulEmail,
+        problems,
+        warnings,
+        healthy: problems.length === 0,
+    };
 }
 
 export function formatReport(r: HealthReport): string {
@@ -123,6 +183,7 @@ export function formatReport(r: HealthReport): string {
         );
     }
     lines.push('', `  last successful email: ${r.lastSuccessfulEmail ?? 'never'}`);
+    lines.push(`  orders stuck holding stock: ${r.reservations.length}`);
     if (r.warnings.length) {
         lines.push('', 'Warnings:', ...r.warnings.map(w => `  - ${w}`));
     }

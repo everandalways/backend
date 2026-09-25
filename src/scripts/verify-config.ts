@@ -125,6 +125,19 @@ if (!allocation) {
     console.log(`  ok  stock allocation strategy — ${allocation.constructor.name}`);
 }
 
+// Vendure only releases stock for orders that are no longer `active`; an order
+// in ArrangingPayment still is. Without this process every abandoned or expired
+// checkout keeps its reservation forever.
+const processes = (config.orderOptions?.process ?? []) as any[];
+if (allocation && !processes.some(p => p?.constructor?.name === 'ReleaseReservationOrderProcess')) {
+    problems.push(
+        'Stock is reserved at checkout but ReleaseReservationOrderProcess is missing from ' +
+            'orderOptions.process. Cancelled and abandoned checkouts would hold stock forever.',
+    );
+} else if (allocation) {
+    console.log('  ok  reservations are released when a checkout is abandoned');
+}
+
 const scheduled = config.schedulerOptions?.tasks ?? [];
 if (allocation && !scheduled.some((t: any) => t.id === 'expire-stale-checkouts')) {
     problems.push(

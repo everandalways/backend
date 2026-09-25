@@ -64,7 +64,7 @@ export const jobHealthAlertTask = new ScheduledTask({
 
         if (report.healthy) {
             if (!lastWasHealthy) {
-                await notify(`✅ Vendure job queues have recovered.\n\n${formatReport(report)}`);
+                await notify(`✅ Vendure health check has recovered.\n\n${formatReport(report)}`);
                 Logger.info('Job queues recovered.', loggerCtx);
             }
             lastWasHealthy = true;
@@ -77,7 +77,7 @@ export const jobHealthAlertTask = new ScheduledTask({
 
         if (shouldAlert) {
             lastAlertAt = Date.now();
-            await notify(`🔴 Vendure job queues are UNHEALTHY.\n\n${formatReport(report)}`);
+            await notify(`🔴 Vendure health check is UNHEALTHY.\n\n${formatReport(report)}`);
         }
         Logger.warn(`Job queues unhealthy: ${report.problems.join(' | ')}`, loggerCtx);
 
