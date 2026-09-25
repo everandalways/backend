@@ -13,7 +13,15 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { config } from '../vendure-config';
+import type { VendureConfig } from '@vendure/core';
+
+// vendure-config refuses to load without the production secrets unless
+// APP_ENV=dev. Nothing checked here depends on APP_ENV, so default to dev and
+// let this run anywhere — including a laptop with no Railway env at all.
+process.env.APP_ENV = process.env.APP_ENV || 'dev';
+// Loaded after APP_ENV is set, hence require rather than a hoisted import.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { config } = require('../vendure-config') as { config: VendureConfig };
 
 // These live outside the public entrypoint, but are what OrderStateMachine
 // itself uses, so this check matches production behaviour exactly.

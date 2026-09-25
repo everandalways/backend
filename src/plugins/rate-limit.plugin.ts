@@ -1,36 +1,33 @@
 import { PluginCommonModule, VendurePlugin } from '@vendure/core';
 import { Module } from '@nestjs/common';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerLimitDetail, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { getThrottlerConfig } from '../config/throttler.config';
+import { GraphQLError } from 'graphql';
+import { getThrottlerConfig, graphqlOperation } from '../config/throttler.config';
 
 /**
  * RateLimitPlugin
- * 
- * Adds global rate limiting to the Vendure API using @nestjs/throttler.
- * Configuration:
- * - 100 requests per minute per IP in production
- * - 1000 requests per minute per IP in development
- * - Stripe webhook routes are excluded from rate limiting
- * 
- * Environment Variables:
- * - THROTTLE_LIMIT_PER_MINUTE: Override default request limit (default: 100 in prod, 1000 in dev)
- * 
- * Protected Routes:
- * - POST /admin-api/* (Admin API)
- * - POST /shop-api/* (Shop API)
- * 
- * Excluded Routes (no rate limiting):
- * - POST /payments/stripe (Vendure StripePlugin webhook — verified against
- *   node_modules/@vendure/payments-plugin/.../stripe.controller.js)
+ *
+ * Rate limits the Shop and Admin APIs with @nestjs/throttler (in-memory store —
+ * the backend runs as a single server process, so that store is authoritative).
+ *
+ * Two limits, both per client IP and per operation (see throttler.config.ts):
+ * - global: THROTTLE_LIMIT_PER_MINUTE (default 1000)
+ * - login:  THROTTLE_LOGIN_LIMIT_PER_MINUTE (default 100), auth mutations only
+ *
+ * Excluded: POST /payments/stripe, the Vendure StripePlugin webhook (verified
+ * against node_modules/@vendure/payments-plugin/.../stripe.controller.js).
  */
 
 /**
- * Custom ThrottlerGuard that skips rate limiting for Stripe webhooks
- * and properly handles IP extraction behind proxies (Railway)
+ * Header carrying the real client IP. Railway's edge overwrites X-Real-IP with
+ * the connecting address, so clients cannot spoof it. Settable so it can be
+ * changed from Railway without a deploy if the edge's behaviour ever changes.
  */
+const CLIENT_IP_HEADER = (process.env.THROTTLE_CLIENT_IP_HEADER || 'x-real-ip').toLowerCase();
+
 export class CustomThrottlerGuard extends ThrottlerGuard {
     /**
      * Override getRequestResponse to properly handle GraphQL context
@@ -52,37 +49,50 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
     }
 
     /**
-     * Override getTracker to properly extract IP from proxied requests
+     * The client's IP.
+     *
+     * NOT req.ip: behind Railway that resolves to a proxy hop whose address
+     * changes from request to request, so every request landed in a near-empty
+     * bucket and nothing was ever throttled (1,500/min sailed through a
+     * 1,000/min limit, with the remaining-count header jumping up and down).
      */
     protected async getTracker(req: Record<string, any>): Promise<string> {
-        // Handle undefined or null request
         if (!req) {
             return 'unknown';
         }
-
-        // Try to get IP from various sources (handles Railway proxy)
-        const ip =
-            req.ip ||
-            req.connection?.remoteAddress ||
-            req.socket?.remoteAddress ||
-            (req.headers?.['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
-            req.headers?.['x-real-ip'] as string ||
-            'unknown';
-
-        return ip;
+        const header = req.headers?.[CLIENT_IP_HEADER];
+        const fromHeader = (Array.isArray(header) ? header[0] : header)?.split(',')[0]?.trim();
+        return fromHeader || req.ip || req.socket?.remoteAddress || 'unknown';
     }
 
-    protected async shouldSkip(context: any): Promise<boolean> {
-        // Try to get HTTP request, but handle cases where context is not HTTP (e.g., GraphQL)
-        const httpContext = context.switchToHttp();
-        if (!httpContext) {
-            // Not an HTTP context, fall back to default behavior
-            return super.shouldSkip(context);
+    /**
+     * GraphQL would otherwise report a throttled request as HTTP 200 with the
+     * error in the body, invisible to monitoring and to the k6 probe. Apollo
+     * turns `extensions.http.status` into the response status.
+     */
+    protected async throwThrottlingException(
+        context: ExecutionContext,
+        detail: ThrottlerLimitDetail,
+    ): Promise<void> {
+        if (graphqlOperation(context)) {
+            throw new GraphQLError('Too many requests. Please wait a moment and try again.', {
+                extensions: { code: 'TOO_MANY_REQUESTS', http: { status: 429 } },
+            });
+        }
+        return super.throwThrottlingException(context, detail);
+    }
+
+    protected async shouldSkip(context: ExecutionContext): Promise<boolean> {
+        const op = graphqlOperation(context);
+        if (op) {
+            // Vendure runs guards on field resolvers as well (fieldResolverEnhancers:
+            // ['guards']). Counting those would charge one product listing dozens
+            // of hits, so only top-level operations count.
+            return op.parent !== 'Query' && op.parent !== 'Mutation';
         }
 
-        const request = httpContext.getRequest();
+        const request = context.switchToHttp().getRequest();
         if (!request) {
-            // No request object available, fall back to default behavior
             return super.shouldSkip(context);
         }
 
@@ -91,22 +101,15 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
             return true;
         }
 
-        // Check if this is a Stripe webhook request
-        const path = request.path?.toLowerCase();
-        const method = request.method?.toUpperCase();
-
-        if (method === 'POST' && path) {
-            // Real Vendure StripePlugin webhook path: POST /payments/stripe
-            // (Controller('payments') + Post('stripe') in
-            // node_modules/@vendure/payments-plugin/package/stripe/stripe.controller.js).
-            // Use === rather than includes() to avoid accidentally bypassing throttle
-            // for unrelated sub-paths.
-            if (path === '/payments/stripe') {
-                return true;
-            }
+        // Real Vendure StripePlugin webhook path: POST /payments/stripe
+        // (Controller('payments') + Post('stripe') in
+        // node_modules/@vendure/payments-plugin/package/stripe/stripe.controller.js).
+        // Use === rather than includes() to avoid accidentally bypassing throttle
+        // for unrelated sub-paths.
+        if (request.method?.toUpperCase() === 'POST' && request.path?.toLowerCase() === '/payments/stripe') {
+            return true;
         }
 
-        // Fall back to default behavior
         return super.shouldSkip(context);
     }
 }
